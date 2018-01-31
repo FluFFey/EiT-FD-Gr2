@@ -22,7 +22,9 @@ ExportedObj/
 *.booproj
 *.svd
 *.pdb
-
+*.log
+fmod_editor.log
+/[Aa]ssets/Mirza Beig/
 # Unity3D generated meta files
 *.pidb.meta
 
