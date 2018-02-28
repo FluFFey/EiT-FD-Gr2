@@ -1,0 +1,837 @@
+fileFormatVersion: 2
+guid: 5326cd232fc3c0446bb6de4c0b4fc233
+timeCreated: 1519829602
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: firsgraphicsexample_0
+    21300002: firsgraphicsexample_1
+    21300004: firsgraphicsexample_2
+    21300006: firsgraphicsexample_3
+    21300008: firsgraphicsexample_4
+    21300010: firsgraphicsexample_5
+    21300012: firsgraphicsexample_6
+    21300014: firsgraphicsexample_7
+    21300016: firsgraphicsexample_8
+    21300018: firsgraphicsexample_9
+    21300020: firsgraphicsexample_10
+    21300022: firsgraphicsexample_11
+    21300024: firsgraphicsexample_12
+    21300026: firsgraphicsexample_13
+    21300028: firsgraphicsexample_14
+    21300030: firsgraphicsexample_15
+    21300032: firsgraphicsexample_16
+    21300034: firsgraphicsexample_17
+    21300036: firsgraphicsexample_18
+    21300038: firsgraphicsexample_19
+    21300040: firsgraphicsexample_20
+    21300042: firsgraphicsexample_21
+    21300044: firsgraphicsexample_22
+    21300046: firsgraphicsexample_23
+    21300048: firsgraphicsexample_24
+    21300050: firsgraphicsexample_25
+    21300052: firsgraphicsexample_26
+    21300054: firsgraphicsexample_27
+    21300056: firsgraphicsexample_28
+    21300058: firsgraphicsexample_29
+    21300060: firsgraphicsexample_30
+    21300062: firsgraphicsexample_31
+    21300064: firsgraphicsexample_32
+    21300066: firsgraphicsexample_33
+    21300068: firsgraphicsexample_34
+    21300070: firsgraphicsexample_35
+    21300072: firsgraphicsexample_36
+    21300074: firsgraphicsexample_37
+    21300076: firsgraphicsexample_38
+    21300078: firsgraphicsexample_39
+    21300080: firsgraphicsexample_40
+    21300082: firsgraphicsexample_41
+    21300084: firsgraphicsexample_42
+    21300086: firsgraphicsexample_43
+    21300088: firsgraphicsexample_44
+    21300090: firsgraphicsexample_45
+    21300092: firsgraphicsexample_46
+    21300094: firsgraphicsexample_47
+  externalObjects: {}
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: firsgraphicsexample_0
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 1583
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_1
+      rect:
+        serializedVersion: 2
+        x: 957
+        y: 1580
+        width: 10
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_2
+      rect:
+        serializedVersion: 2
+        x: 988
+        y: 1581
+        width: 10
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_3
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 1129
+        width: 767
+        height: 444
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_4
+      rect:
+        serializedVersion: 2
+        x: 877
+        y: 1442
+        width: 4
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_5
+      rect:
+        serializedVersion: 2
+        x: 881
+        y: 1062
+        width: 588
+        height: 513
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_6
+      rect:
+        serializedVersion: 2
+        x: 2296
+        y: 1412
+        width: 5
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_7
+      rect:
+        serializedVersion: 2
+        x: 1593
+        y: 1295
+        width: 162
+        height: 89
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_8
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 775
+        width: 438
+        height: 213
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_9
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 646
+        width: 545
+        height: 299
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_10
+      rect:
+        serializedVersion: 2
+        x: 1359
+        y: 463
+        width: 677
+        height: 481
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_11
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 481
+        width: 33
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_12
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 454
+        width: 29
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_13
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 479
+        width: 31
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_14
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 33
+        width: 937
+        height: 428
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_15
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 452
+        width: 19
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_16
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 456
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_17
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 459
+        width: 24
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_18
+      rect:
+        serializedVersion: 2
+        x: 1617
+        y: 179
+        width: 121
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_19
+      rect:
+        serializedVersion: 2
+        x: 1753
+        y: 237
+        width: 38
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_20
+      rect:
+        serializedVersion: 2
+        x: 1815
+        y: 252
+        width: 69
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_21
+      rect:
+        serializedVersion: 2
+        x: 1907
+        y: 247
+        width: 51
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_22
+      rect:
+        serializedVersion: 2
+        x: 1971
+        y: 280
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_23
+      rect:
+        serializedVersion: 2
+        x: 2005
+        y: 231
+        width: 39
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_24
+      rect:
+        serializedVersion: 2
+        x: 2159
+        y: 236
+        width: 80
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_25
+      rect:
+        serializedVersion: 2
+        x: 1612
+        y: 252
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_26
+      rect:
+        serializedVersion: 2
+        x: 1972
+        y: 251
+        width: 16
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_27
+      rect:
+        serializedVersion: 2
+        x: 2053
+        y: 222
+        width: 47
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_28
+      rect:
+        serializedVersion: 2
+        x: 2115
+        y: 252
+        width: 34
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_29
+      rect:
+        serializedVersion: 2
+        x: 1707
+        y: 175
+        width: 76
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_30
+      rect:
+        serializedVersion: 2
+        x: 1787
+        y: 174
+        width: 33
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_31
+      rect:
+        serializedVersion: 2
+        x: 1822
+        y: 174
+        width: 78
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_32
+      rect:
+        serializedVersion: 2
+        x: 1981
+        y: 172
+        width: 40
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_33
+      rect:
+        serializedVersion: 2
+        x: 2008
+        y: 198
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_34
+      rect:
+        serializedVersion: 2
+        x: 2024
+        y: 172
+        width: 111
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_35
+      rect:
+        serializedVersion: 2
+        x: 2143
+        y: 148
+        width: 93
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_36
+      rect:
+        serializedVersion: 2
+        x: 1022
+        y: 126
+        width: 68
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_37
+      rect:
+        serializedVersion: 2
+        x: 1094
+        y: 123
+        width: 54
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_38
+      rect:
+        serializedVersion: 2
+        x: 1168
+        y: 119
+        width: 141
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_39
+      rect:
+        serializedVersion: 2
+        x: 1919
+        y: 151
+        width: 44
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_40
+      rect:
+        serializedVersion: 2
+        x: 2229
+        y: 139
+        width: 48
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_41
+      rect:
+        serializedVersion: 2
+        x: 1150
+        y: 131
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_42
+      rect:
+        serializedVersion: 2
+        x: 980
+        y: 79
+        width: 47
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_43
+      rect:
+        serializedVersion: 2
+        x: 1034
+        y: 68
+        width: 76
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_44
+      rect:
+        serializedVersion: 2
+        x: 1111
+        y: 79
+        width: 45
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_45
+      rect:
+        serializedVersion: 2
+        x: 1162
+        y: 73
+        width: 103
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_46
+      rect:
+        serializedVersion: 2
+        x: 1269
+        y: 77
+        width: 68
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: firsgraphicsexample_47
+      rect:
+        serializedVersion: 2
+        x: 1004
+        y: 37
+        width: 119
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    outline: []
+    physicsShape: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
