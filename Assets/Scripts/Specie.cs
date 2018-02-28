@@ -26,6 +26,10 @@ public class Specie {
 		this.rarity = rarity;
 		this.edible = false;
 	}
+
+	//FIXME: TEMP FIX UNTIL BASESPECIES IS SET IN GAMESTATE.
+	public Specie() {
+	}
 	
 
 	public enum Property { 

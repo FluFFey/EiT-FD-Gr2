@@ -44,13 +44,14 @@ public class GameState : MonoBehaviour {
 
 		//init HUD-State
 		this.survivors = 10;
-		this.currentJobs = new ArrayList ();
+		this.currentJobs = new List<Job> ();
 		this.seeds = new Dictionary<Seed, int>();
 
 		//init Species-State
-		this.knownSpecies = new ArrayList(baseSpecies); 
-		this.unknownSpecies = new ArrayList(undiscoveredSpecies); 
-		this.mySplices = new ArrayList ();
+		//TODO ARRAYLIST DEPRECATED
+		this.knownSpecies = new List<Specie>(baseSpecies); 
+		this.unknownSpecies = new List<Specie>(undiscoveredSpecies); 
+		this.mySplices = new List <Specie>();
 	}
 
 	// JOB-METHODS -------------------------------------------------------------
@@ -69,7 +70,7 @@ public class GameState : MonoBehaviour {
 	//TO BE TRIGGED WHEN NEXT DAY IS PRESSED. 
 	void resetJobs() {
 		//new day, new jobs.
-		this.currentJobs = new ArrayList ();
+		this.currentJobs = new List<Job>();
 	}
 		
 
