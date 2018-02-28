@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Job  {
 	public int id { get; set;}
-	public int duration { get; set;}
 	public int numWorkers { get; set;}
 	public JobType jobbType;
 
-	public Job (JobType jobbType, int id, int duration, int numWorkers)
+	public Job (JobType jobbType, int id, int numWorkers)
 	{
 		this.jobbType = jobbType;
 		this.id = id;
-		this.duration = duration;
 		this.numWorkers = numWorkers;
 	}	
 }
