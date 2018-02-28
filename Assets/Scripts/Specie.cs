@@ -28,11 +28,11 @@ public class Specie {
 	}
 	
 
-	enum Property { 
+	public enum Property { 
 		//TODO: INSERT Properties.
 	}
 
-	enum Rarity {
+	public enum Rarity {
 		COMMON, RARE, EPIC, LEGENDARY
 	}
 
