@@ -23,7 +23,6 @@ public class Specie {
 		this.properties = properties;
 		this.seedsPerWorker = seedsPerWorker;
 		this.image = image;
-		this.tag = tag;
 		this.rarity = rarity;
 		this.edible = false;
 	}

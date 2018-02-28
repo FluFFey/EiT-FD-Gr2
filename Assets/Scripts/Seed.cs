@@ -11,6 +11,8 @@ public class Seed {
 	public Seed (string name, Specie specie)
 	{
 		this.name = name;
+		this.specie = specie;
+		//TODO: SET IMAGE
 	}
 
 
