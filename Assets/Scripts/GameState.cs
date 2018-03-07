@@ -65,7 +65,6 @@ public class GameState : MonoBehaviour {
 		//init Calendar-State
 		this.naturalDisasters = new Dictionary<int, NaturalDisaster>();
 
-		//TODO: CALC DISASTERS.
 	}
 
 	// -------------------------JOB-METHODS --------------------------------------
