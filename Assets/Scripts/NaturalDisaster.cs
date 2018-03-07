@@ -4,16 +4,16 @@ using System.Collections.Generic;
 public class NaturalDisaster
 {
 	public String name { get; }
-	public Property property { get;}
+	public DisasterProperty property { get;}
 
 
-	public NaturalDisaster (string name, Property property) {
+	public NaturalDisaster (string name, DisasterProperty property) {
 		this.name = name;
 		this.property = property;
 	}
 }
 	
-public enum Property { 
+public enum DisasterProperty { 
 	//TODO: INSERT all properties
 	WIND, WATER, EARTHQUAKE
 }

@@ -64,7 +64,7 @@ public class GameState : MonoBehaviour {
 
 	}
 
-	// -------------------------JOB-METHODS --------------------------------------
+	// -------------------------JOB-METHODS--------------------------------------
 	bool addJob(JobType jobType, int numWorkers, int id) {
 		//if insufficient survivors or available workers -> cancel job.
 		if ((survivors - this.currentJobs.Sum(j => j.numWorkers)) < numWorkers) {
@@ -89,7 +89,7 @@ public class GameState : MonoBehaviour {
 		// ADD DEATHLOGIC
 
 		// ADD ACTIVATION OF A NATURAL DISASTER IF PRESENT
-		bool val = checkDisaster(daysPassed);
+		checkDisaster(daysPassed);
 
 		// INCEREMENT DAY
 		daysPassed++;
@@ -103,17 +103,17 @@ public class GameState : MonoBehaviour {
 	public void setDisasters(int interval) {
 		// FOR EACH X DAY, SET TO A RANDOM DISASTER. 
 		for (int i = interval; i <= totalDays; i += interval) {
-			Property type = EnumUtil.RandomEnumValue<Property> ();
+			DisasterProperty type = EnumUtil.RandomEnumValue<DisasterProperty> ();
 			switch (type) 
 			{
 			//TODO: ADD CASE FOR EACH PROPERTY THAT IS ADDED. 
-			case Property.WIND:
+			case DisasterProperty.WIND:
 				this.naturalDisasters.Add (i, new NaturalDisaster ("Hurricane", type));
 				break;
-			case Property.EARTHQUAKE:
+			case DisasterProperty.EARTHQUAKE:
 				this.naturalDisasters.Add (i, new NaturalDisaster ("Earthquake", type));
 				break;
-			case Property.WATER:
+			case DisasterProperty.WATER:
 				this.naturalDisasters.Add (i, new NaturalDisaster ("Tsunami", type));
 				break;
 			default:
