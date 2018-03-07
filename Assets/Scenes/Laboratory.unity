@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 320472733}
   - component: {fileID: 320472736}
   m_Layer: 0
-  m_Name: leaveLab
+  m_Name: LabDoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
