@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Specie {
 
-	public string name { get; }
-	public int foodPoint { get; }
-	public int durability { get; }
-	public int growTime { get; }
-	public int seedsPerWorker { get;}
+	public string name { get; set;}
+	public int foodPoint { get; set;}
+	public int durability { get; set; }
+	public int growTime { get; set; }
+	public int seedsPerWorker { get; set;}
 	public List<DisasterProperty> resistantProperties { get; set;}
 	//TODO: ADD NEGATIVE PROPS? 
-	public Sprite image { get; }
-	public Rarity rarity { get; }
+	public Sprite image { get; set;}
+	public Rarity rarity { get; set;}
 	public bool edible { get; set;}
 
 	public Specie (string name, int foodPoint, int durability, int growTime, List<DisasterProperty> properties, Sprite image, int seedsPerWorker,int tag, Rarity rarity)
