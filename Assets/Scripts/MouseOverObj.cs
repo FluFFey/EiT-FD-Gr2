@@ -6,7 +6,7 @@ public class MouseOverObj : MonoBehaviour
 {
     public bool isMouseOver;
 
-    private void OnMouseOver()
+    void OnMouseOver()
     {
         isMouseOver = true;
     }
