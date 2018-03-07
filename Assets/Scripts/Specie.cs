@@ -8,19 +8,19 @@ public class Specie {
 	public int foodPoint { get; }
 	public int durability { get; }
 	public int growTime { get; }
-	public Property[] properties { get; }
+	public List<Property> resistantProperties { get; }
 	public Sprite image { get; }
 	public int seedsPerWorker { get;}
 	public Rarity rarity { get; }
 	public bool edible { get; set;}
 
-	public Specie (string name, int foodPoint, int durability, int growTime, Property[] properties, Sprite image, int seedsPerWorker,int tag, Rarity rarity)
+	public Specie (string name, int foodPoint, int durability, int growTime, List<Property> properties, Sprite image, int seedsPerWorker,int tag, Rarity rarity)
 	{
 		this.name = name;
 		this.foodPoint = foodPoint;
 		this.durability = durability;
 		this.growTime = growTime;
-		this.properties = properties;
+		this.resistantProperties = properties;
 		this.seedsPerWorker = seedsPerWorker;
 		this.image = image;
 		this.rarity = rarity;
@@ -30,15 +30,9 @@ public class Specie {
 	//FIXME: TEMP FIX UNTIL BASESPECIES IS SET IN GAMESTATE.
 	public Specie() {
 	}
-	
-
-	public enum Property { 
-		//TODO: INSERT Properties.
-	}
 
 	public enum Rarity {
 		COMMON, RARE, EPIC, LEGENDARY
 	}
 
 }
-
