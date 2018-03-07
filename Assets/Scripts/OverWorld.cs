@@ -17,6 +17,7 @@ public class Overworld : MonoBehaviour
         BOTTLE,
         NO_HIGHLIGHT
     }
+
     private void Start()
     {
         //children = new GameObject[numberOfInteractables];
@@ -52,7 +53,7 @@ public class Overworld : MonoBehaviour
 
                 break;
             case highlightableObjects.FARM:
-                SceneManager.LoadScene("Forest", LoadSceneMode.Single);
+                SceneManager.LoadScene("Farm", LoadSceneMode.Single);
                 SceneManager.LoadScene("HUD", LoadSceneMode.Additive);
                 break;
             case highlightableObjects.BUSH:
