@@ -33,9 +33,6 @@ public class GameState : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		totalDays = 100;
-		setDisasters (10);
-		pressNextDay();
 	}
 	
 	// Update is called once per frame
