@@ -6,9 +6,10 @@ using UnityEngine;
 public class Cloning : MonoBehaviour{
     private Specie specie;
     private Seed seed;
-
-    //INITIALIZE VARIEBLES AND GAMESTATE
-    private void Awake(Specie specie, int numWorkers)
+    
+    //INITIALIZE VARIABLES AND ADD TO GAMESTATE
+    //Called on click (Clone!-button)
+    public void Clone(Specie specie, int numWorkers)
     {
         this.specie = specie;
         seed = new Seed(specie.name + " seed", specie);
