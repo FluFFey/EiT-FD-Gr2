@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 public class Overworld : MonoBehaviour
 {
     private const int numberOfInteractables = 6;
-    public GameObject[] children;
-    private enum highlightableObjects
+    public GameObject[] highlightableChildren;
+    GameObject[] UIPopUps;
+
+    private enum HIGHLIGHTABLE_OBJECTS
     {
         LABORATORY,
         FOREST,
@@ -17,8 +19,30 @@ public class Overworld : MonoBehaviour
         BOTTLE,
         NO_HIGHLIGHT
     }
+
+    private enum UI_POP_UPS
+    {
+        FOREST,
+        POND,
+        BUSH,
+        BOTTLE,
+        NO_UI_POP_UPS
+    }
+
+
     private void Start()
     {
+        UIPopUps = new GameObject[(int)UI_POP_UPS.NO_UI_POP_UPS];
+        //first child is 1, 0 is current gameObject
+        UIPopUps[(int)UI_POP_UPS.FOREST] = GameObject.Find("ForestUI");
+        UIPopUps[(int)UI_POP_UPS.POND] = GameObject.Find("PondUI");
+        UIPopUps[(int)UI_POP_UPS.BUSH] = GameObject.Find("BushUI");
+        UIPopUps[(int)UI_POP_UPS.BOTTLE] = GameObject.Find("MessageInABottleUI");
+        for (int i = 0; i < (int)UI_POP_UPS.NO_UI_POP_UPS; i++)
+        {
+            UIPopUps[i].SetActive(false);
+        }
+
         //children = new GameObject[numberOfInteractables];
         ////first child is 1, 0 is current gameObject
         //for (int i = 1; i < numberOfInteractables;i++)
@@ -28,44 +52,65 @@ public class Overworld : MonoBehaviour
     }
     void Update ()
     {
-		
-	}
+        handleInput();
 
-    private void OnMouseDown()
+    }
+
+    private void disableUIPopups(UI_POP_UPS exclusion = UI_POP_UPS.NO_UI_POP_UPS)
     {
-        highlightableObjects highlightedButton = highlightableObjects.NO_HIGHLIGHT;
-        for (int i =0; i < numberOfInteractables; i++)
+        for (int i = 0; i < (int)UI_POP_UPS.NO_UI_POP_UPS; i++)
         {
-            if (children[i].GetComponent<MouseOverObj>().isMouseOver)
+            if (i != (int)exclusion)
             {
-                highlightedButton = (highlightableObjects)i;
+                UIPopUps[i].SetActive(false);
             }
         }
+    }
 
-        switch (highlightedButton)
+    private void handleInput()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
-            case highlightableObjects.LABORATORY:
-                SceneManager.LoadScene("Laboratory", LoadSceneMode.Single);
-                SceneManager.LoadScene("HUD", LoadSceneMode.Additive);
-                break;
-            case highlightableObjects.FOREST:
-
-                break;
-            case highlightableObjects.FARM:
-                SceneManager.LoadScene("Forest", LoadSceneMode.Single);
-                SceneManager.LoadScene("HUD", LoadSceneMode.Additive);
-                break;
-            case highlightableObjects.BUSH:
-                break;
-            case highlightableObjects.POND:
-                break;
-            case highlightableObjects.BOTTLE:
-                break;
-            case highlightableObjects.NO_HIGHLIGHT:
-                break;
-            default:
-                print("invalid highlightable object type");
-                break;
+            HIGHLIGHTABLE_OBJECTS highlightedButton = HIGHLIGHTABLE_OBJECTS.NO_HIGHLIGHT;
+            for (int i = 0; i < numberOfInteractables; i++)
+            {
+                if (highlightableChildren[i].GetComponent<MouseOverObj>().isMouseOver)
+                {
+                    highlightedButton = (HIGHLIGHTABLE_OBJECTS)i;
+                }
+            }
+ 
+            switch (highlightedButton)
+            {
+                case HIGHLIGHTABLE_OBJECTS.LABORATORY:
+                    SceneHandler.instance.changeScene(SceneHandler.SCENES.LAB);
+                    break;
+                case HIGHLIGHTABLE_OBJECTS.FOREST:
+                    disableUIPopups(UI_POP_UPS.FOREST);
+                    UIPopUps[(int)UI_POP_UPS.FOREST].SetActive(true);
+                    break;
+                case HIGHLIGHTABLE_OBJECTS.FARM:
+                    SceneHandler.instance.changeScene(SceneHandler.SCENES.FARM);
+                    break;
+                case HIGHLIGHTABLE_OBJECTS.BUSH:
+                    disableUIPopups(UI_POP_UPS.BUSH);
+                    UIPopUps[(int)UI_POP_UPS.BUSH].SetActive(true);
+                    break;
+                case HIGHLIGHTABLE_OBJECTS.POND:
+                    disableUIPopups(UI_POP_UPS.POND);
+                    UIPopUps[(int)UI_POP_UPS.POND].SetActive(true);
+                    break;
+                case HIGHLIGHTABLE_OBJECTS.BOTTLE:
+                    disableUIPopups(UI_POP_UPS.BOTTLE);
+                    UIPopUps[(int)UI_POP_UPS.BOTTLE].SetActive(true);
+                    break;
+                case HIGHLIGHTABLE_OBJECTS.NO_HIGHLIGHT:
+                    break;
+                default:
+                    print("invalid highlightable object type");
+                    break;
+            }
         }
     }
+
 }

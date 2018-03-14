@@ -4,41 +4,39 @@ using UnityEngine;
 
 public class Specie {
 
-	public string name { get; }
-	public int foodPoint { get; }
-	public int durability { get; }
-	public int growTime { get; }
-	public Property[] properties { get; }
-	public Sprite image { get; }
-	public int seedsPerWorker { get;}
-	public Rarity rarity { get; }
+	public string name { get; set;}
+	public int foodPoint { get; set;}
+	public int durability { get; set; }
+	public int growTime { get; set; }
+	public int seedsPerWorker { get; set;}
+	public List<DisasterProperty> resistantProperties { get; set;}
+	//TODO: ADD NEGATIVE PROPS? 
+	public Sprite image { get; set;}
+	public Rarity rarity { get; set;}
 	public bool edible { get; set;}
 
-	public Specie (string name, int foodPoint, int durability, int growTime, Property[] properties, Sprite image, int seedsPerWorker,int tag, Rarity rarity)
+	public Specie (string name, int foodPoint, int durability, int growTime, List<DisasterProperty> properties, Sprite image, int seedsPerWorker,int tag, Rarity rarity)
 	{
 		this.name = name;
 		this.foodPoint = foodPoint;
 		this.durability = durability;
 		this.growTime = growTime;
-		this.properties = properties;
+		this.resistantProperties = properties;
 		this.seedsPerWorker = seedsPerWorker;
 		this.image = image;
 		this.rarity = rarity;
 		this.edible = false;
 	}
 
-	//FIXME: TEMP FIX UNTIL BASESPECIES IS SET IN GAMESTATE.
-	public Specie() {
+	public Specie(){
 	}
-	
 
-	public enum Property { 
-		//TODO: INSERT Properties.
-	}
+	//FIXME: TEMP FIX UNTIL BASESPECIES IS SET IN GAMESTATE.
+
+
 
 	public enum Rarity {
 		COMMON, RARE, EPIC, LEGENDARY
 	}
 
 }
-
