@@ -12,6 +12,11 @@ public class GameState : MonoBehaviour {
 
 	public static GameState instance;
 
+	//TODO: UPDATE BASED ON AUDUNS DRAWING
+	public const int IMAGE_WIDTH = 5;
+	public const int DISASTER_INTERVAL = 4;
+
+
 	//HUD-ATTRIBUTES
 	int survivors; 
 	List<Job> currentJobs;
@@ -31,6 +36,9 @@ public class GameState : MonoBehaviour {
 	//Unknown species
 	Specie[] undiscoveredSpecies = { new Specie() , new Specie(), new Specie(), new Specie(), new Specie()};
 
+	// FARM-ATTRIBUTES.
+	Dictionary<int, Seed> plantedSeeds;
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -49,23 +57,31 @@ public class GameState : MonoBehaviour {
 		}
 		DontDestroyOnLoad (this);
 
-		//init HUD-State
+		// init HUD-State
 		this.survivors = 10;
 		this.currentJobs = new List<Job> ();
 		this.seeds = new Dictionary<Seed, int>();
 
-		//init Species-State
+		// init Species-State
 		this.knownSpecies = new List<Specie>(baseSpecies); 
 		this.unknownSpecies = new List<Specie>(undiscoveredSpecies); 
 		this.mySplices = new List <Specie>();
 
-		//init Calendar-State
+		// init Calendar-State
 		this.naturalDisasters = new Dictionary<int, NaturalDisaster>();
+		this.totalDays = 20; //FIXME: Set correctly
+
+		// init Farm-State
+		this.plantedSeeds = new Dictionary<int, Seed>();
+
+		// Set disasters at given interval
+
+		setDisasters (DISASTER_INTERVAL);
 
 	}
 
 	// -------------------------JOB-METHODS--------------------------------------
-	bool addJob(JobType jobType, int numWorkers, int id) {
+	public bool addJob(JobType jobType, int numWorkers, int id) {
 		//if insufficient survivors or available workers -> cancel job.
 		if ((survivors - this.currentJobs.Sum(j => j.numWorkers)) < numWorkers) {
 			return false;
@@ -77,7 +93,7 @@ public class GameState : MonoBehaviour {
 	}
 
 	//TO BE TRIGGED WHEN NEXT DAY IS PRESSED. 
-	void resetJobs() {
+	public 	void resetJobs() {
 		//new day, new jobs.
 		this.currentJobs = new List<Job>();
 	}
@@ -122,18 +138,48 @@ public class GameState : MonoBehaviour {
 	public void pressNextDay() {
 		// ADD DEATHLOGIC
 
+
 		// ADD ACTIVATION OF A NATURAL DISASTER IF PRESENT
-		if (checkDisaster (daysPassed)) {
-			//TODO: loop through all seeds and check if resistant. Remove if not. Add to a info-table?
-
+		if (checkDisaster (3)) {
+			checkSeedResistance(3);
+			//TODO: NOTIFY?
 		}
-
+			
 		// INCEREMENT DAY
 		daysPassed++;
+
+		incrementSeedDaysGrown ();
+
+		//TODO: CHECK IF ANY SEEDS ARE RIPE.
 
 		// ADD LOGIC TO CHECK IF GAME IS WON/OVER.
 	}
 
+	// method that loops through each seed and checks it corresponding resitances vs the disastertype.
+	// if no resitance it seets the seed to null/0.
+	public void checkSeedResistance(int disasterDay) {
+		NaturalDisaster disasterType = this.naturalDisasters[disasterDay];
+		//loop through all seeds and check resistance.
+		List<int> removableItems = new List<int>();
+		foreach (var item in this.plantedSeeds) {
+			bool resistant = false;
+			foreach (DisasterProperty resistance in item.Value.specie.resistantProperties) {
+				if (resistance == disasterType.property) {
+					resistant = true;
+					break;
+				}
+			}
+			//remove seed from item if no resistance
+			if (!resistant) {
+				removableItems.Add(item.Key);
+			}
+		}
+
+		foreach (var key in removableItems) {
+			this.plantedSeeds.Remove (key);
+		}
+
+	}
 
 
 	//SETS PREDEFINED DISASTERS AND ADDS A RANDOM DISASTER TO EACH EVENT.
@@ -159,14 +205,41 @@ public class GameState : MonoBehaviour {
 			}
 		}
 	}
-
-	//TODO: CONSIDER VOID.
+		
 	public bool checkDisaster(int day) {
 		if (this.naturalDisasters.ContainsKey (day)) {
-			//TODO EXECUTE DISASTER LOGIC
 			return true;
 		}
 		return false;
 	}
+
+	//------------------------FARM-STATE-----------------------------
+
+	// plants seed at desired index if available slot
+	public void plantSeed(Seed seed, int index) {
+		if (emptyFarmSlot (index)) {
+			this.plantedSeeds.Add (index, seed);
+		}
+	}
+
+	public bool emptyFarmSlot(int index) {
+		//int x = this.IMAGE_WIDTH % index;
+		//int y = this.IMAGE_WIDTH / index;
+
+		if (this.plantedSeeds.ContainsKey (index)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	// method that increments number of days grown for each seed. 
+	// to be called when next day is clicked
+	public void incrementSeedDaysGrown() {
+		foreach (Seed seed in this.plantedSeeds.Values) {
+			seed.daysGrown++;
+		}
+	}
+
 }
 
