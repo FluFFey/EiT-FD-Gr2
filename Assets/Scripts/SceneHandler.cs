@@ -30,7 +30,7 @@ public class SceneHandler : MonoBehaviour {
 
     public void changeScene(SCENES sceneToLoad)
     {
-        string oldScene = currentScene;
+        //string oldScene = currentScene;
         switch (sceneToLoad)
         {
             case SCENES.FARM:

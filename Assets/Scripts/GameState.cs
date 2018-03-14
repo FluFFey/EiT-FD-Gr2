@@ -16,9 +16,9 @@ public class GameState : MonoBehaviour {
 	int survivors; 
 	List<Job> currentJobs;
 	Dictionary<Seed, int> seeds;
-	List<Specie> knownSpecies;
+    public List<Specie> knownSpecies;
 	List<Specie> unknownSpecies;
-	List<Specie> mySplices;
+	public List<Specie> mySplices;
 
 	//CALENDAR-ATTRIBUTES
 	int totalDays;
@@ -27,7 +27,7 @@ public class GameState : MonoBehaviour {
 
 	//BASE-SPECIES
 	//TODO: ADD VALUES TO EACH SPECIE. 
-	Specie[] baseSpecies = { new Specie() , new Specie(), new Specie(), new Specie(), new Specie()};
+	Specie[] baseSpecies = { new Specie("tomat") , new Specie("fesk"), new Specie("gulrot"), new Specie("kjøtt"), new Specie("ku")};
 	//Unknown species
 	Specie[] undiscoveredSpecies = { new Specie() , new Specie(), new Specie(), new Specie(), new Specie()};
 
