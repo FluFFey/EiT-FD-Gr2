@@ -15,6 +15,7 @@ public class GameState : MonoBehaviour {
 	//TODO: UPDATE BASED ON AUDUNS DRAWING
 	public const int IMAGE_WIDTH = 5;
 	public const int DISASTER_INTERVAL = 4;
+	public const int TOTAL_DAYS = 20;
 
 
 	//HUD-ATTRIBUTES
@@ -69,7 +70,7 @@ public class GameState : MonoBehaviour {
 
 		// init Calendar-State
 		this.naturalDisasters = new Dictionary<int, NaturalDisaster>();
-		this.totalDays = 20; //FIXME: Set correctly
+		this.totalDays = TOTAL_DAYS; //FIXME: Set correctly
 
 		// init Farm-State
 		this.plantedSeeds = new Dictionary<int, Seed>();
