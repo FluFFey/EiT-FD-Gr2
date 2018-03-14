@@ -14,13 +14,13 @@ public class LabHandler : MonoBehaviour
     }
     LAB_VIEWS currentView = LAB_VIEWS.LOBBY;
 
-    public GameObject topLevelCloneUI;
-    public GameObject topLevelSpliceUI;
 
+    //Splice related variables
+    public GameObject topLevelSpliceUI;
     public SpliceScreen splicer;
+    public Cloning cloner;
     public GameObject spliceGO;
     public GameObject spliceUIPanel;
-    
     public GameObject leaveSplicing;
     public GameObject[] spliceMachines;
     public GameObject addSpliceWorkerButton;
@@ -29,6 +29,8 @@ public class LabHandler : MonoBehaviour
     private Specie firstInsertedSpecie;
     private Specie secondInsertedSpecie;
 
+    //Clone related variables
+    public GameObject topLevelCloneUI;
     public GameObject cloneGO;
     public GameObject cloneUIPanel;
     public GameObject cloneMachine;
@@ -38,16 +40,13 @@ public class LabHandler : MonoBehaviour
     public GameObject leaveCloning;
     private Specie specieToClone;
 
+    //Other
     public GameObject draggableObject;
     public GameObject leaveLabDoor;
-
     private GameObject draggedObject;
     List<DisasterProperty> chosenProperties;
     int numberOfWorkers = 0;
-
-
-
-    Coroutine cameraMovementCoroutine;
+    Coroutine cameraMovementCoroutine; //coroutine for moving camera
 
     // Use this for initialization
     void Awake()
@@ -71,6 +70,10 @@ public class LabHandler : MonoBehaviour
 
         topLevelSpliceUI.SetActive(false);
         topLevelCloneUI.SetActive(false);
+
+        firstInsertedSpecie = null;
+        secondInsertedSpecie = null;
+        specieToClone = null;
     }
 
     // Update is called once per frame
@@ -166,17 +169,20 @@ public class LabHandler : MonoBehaviour
             }
         }
 
-        if (cloneButton.GetComponent<MouseOverObj>().isMouseOver && cloneMachine != null)
+        if (cloneButton.GetComponent<MouseOverObj>().isMouseOver && specieToClone != null)
         {
             if (Input.GetMouseButtonDown(0))
             {
-                //TODO: job handling here
-                //TODO: add clone function here
-                numberOfWorkers--;
+                if (GameState.instance.addJob(JobType.CLONE,numberOfWorkers, 0))
+                {
+                    cloner.Clone(specieToClone, numberOfWorkers);
+                }
+                numberOfWorkers = 0;
             }
         }
 
     }
+
     /// <summary>
     /// handle splice input
     /// </summary>
@@ -236,13 +242,10 @@ public class LabHandler : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                //TODO: job handling here
-                int availableWorkers = 10;
-                if (numberOfWorkers < availableWorkers)
+                if (GameState.instance.addJob(JobType.SPLICE,numberOfWorkers,1))
                 {
                     splicer.spliceSpecies(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers, chosenProperties);
                 }
-
             }
         }
     }
