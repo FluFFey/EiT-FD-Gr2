@@ -16,7 +16,7 @@ public class GameState : MonoBehaviour {
 	public const int IMAGE_WIDTH = 5;
 	public const int DISASTER_INTERVAL = 4;
 	public const int TOTAL_DAYS = 20;
-
+	public const int FOOD_POINT_PER_WORKER = 2;
 
 	//HUD-ATTRIBUTES
 	int survivors; 
@@ -25,6 +25,7 @@ public class GameState : MonoBehaviour {
     List<Specie> knownSpecies;
     List<Specie> unknownSpecies;
 	List<Specie> mySplices { get; set; }
+	int foodPointsConsumed; 
 
 	//CALENDAR-ATTRIBUTES
 	int totalDays;
@@ -62,6 +63,7 @@ public class GameState : MonoBehaviour {
 		this.survivors = 10;
 		this.currentJobs = new List<Job> ();
 		this.seeds = new Dictionary<Seed, int>();
+
 
 		// init Species-State
 		this.knownSpecies = new List<Specie>(baseSpecies); 
@@ -137,8 +139,8 @@ public class GameState : MonoBehaviour {
 	//------------------------CALENDAR-STATE-----------------------------
 
 	public void pressNextDay() {
-		// ADD DEATHLOGIC
-
+		// DEATHLOGIC. TODO: Apply return value in window?
+		print("Num dead = " + (this.survivors-calculateSurvivors()));
 
 		// ADD ACTIVATION OF A NATURAL DISASTER IF PRESENT
 		if (checkDisaster (daysPassed)) {
@@ -146,10 +148,12 @@ public class GameState : MonoBehaviour {
 			//TODO: NOTIFY?
 		}
 			
-		// INCEREMENT DAY
-		daysPassed++;
-
+		// Seeds have now grown for another day. Some may even be ripe. 
 		incrementSeedDaysGrown ();
+
+		// INCEREMENT DAY AND RESET FOODPOINTSCONSUMED
+		daysPassed++;
+		this.foodPointsConsumed = 0;
 
 		//TODO: CHECK IF ANY SEEDS ARE RIPE.
 
@@ -208,11 +212,15 @@ public class GameState : MonoBehaviour {
 	}
 		
 	public bool checkDisaster(int day) {
-		if (this.naturalDisasters.ContainsKey (day)) {
-			return true;
-		}
-		return false;
+		return this.naturalDisasters.ContainsKey (day);
 	}
+
+	public int calculateSurvivors() {
+		float rest = this.survivors*FOOD_POINT_PER_WORKER - this.foodPointsConsumed;
+		this.survivors = this.survivors - Mathf.CeilToInt (rest / (float)FOOD_POINT_PER_WORKER);
+		return this.survivors;
+	}
+
 
 	//------------------------FARM-STATE-----------------------------
 
@@ -226,12 +234,8 @@ public class GameState : MonoBehaviour {
 	public bool emptyFarmSlot(int index) {
 		//int x = this.IMAGE_WIDTH % index;
 		//int y = this.IMAGE_WIDTH / index;
-
-		if (this.plantedSeeds.ContainsKey (index)) {
-			return false;
-		} else {
-			return true;
-		}
+		return this.plantedSeeds.ContainsKey (index);
+	
 	}
 
 	// method that increments number of days grown for each seed. 
@@ -240,6 +244,28 @@ public class GameState : MonoBehaviour {
 		foreach (Seed seed in this.plantedSeeds.Values) {
 			seed.daysGrown++;
 		}
+	}
+
+	// TODO CONSIDER NON-VOID
+	public void eatFood(int index) {
+			if(checkRipeSeed(index)){
+				Seed seed = this.plantedSeeds[index];
+				this.plantedSeeds.Remove(index);
+				Specie food = seed.specie;
+				this.foodPointsConsumed += food.foodPoint;
+			}
+	}
+
+	public bool checkRipeSeed(int index) {
+		if (!emptyFarmSlot (index)) {
+			//TODO: IMPLEMENT DURABILITY ALSO? WHERE TO SET EDIBLE? 
+			if (this.plantedSeeds [index].daysGrown >= this.plantedSeeds [index].specie.growTime) {
+				//TODO: IS THIS ATTRIBUTE EVEN NECESSARY?
+				this.plantedSeeds [index].specie.edible = true;
+				return true;
+			}	
+		}
+		return false;
 	}
 
 }
