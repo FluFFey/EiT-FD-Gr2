@@ -62,14 +62,10 @@ public class GameState : MonoBehaviour {
 		//init Calendar-State
 		this.naturalDisasters = new Dictionary<int, NaturalDisaster>();
 
-<<<<<<< HEAD
-	public bool addJob(JobType jobType, int numWorkers, int id) {
-=======
 	}
 
 	// -------------------------JOB-METHODS--------------------------------------
 	bool addJob(JobType jobType, int numWorkers, int id) {
->>>>>>> 4a371bb9e7addc75216748cdf98bea5418ba3dff
 		//if insufficient survivors or available workers -> cancel job.
 		if ((survivors - this.currentJobs.Sum(j => j.numWorkers)) < numWorkers) {
 			return false;
