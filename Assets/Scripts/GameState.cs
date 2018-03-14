@@ -157,7 +157,7 @@ public class GameState : MonoBehaviour {
 	}
 
 	// method that loops through each seed and checks it corresponding resitances vs the disastertype.
-	// if no resitance it seets the seed to null/0.
+	// if no resitance it removes the seed from plantedSeeds
 	public void checkSeedResistance(int disasterDay) {
 		NaturalDisaster disasterType = this.naturalDisasters[disasterDay];
 		//loop through all seeds and check resistance.
