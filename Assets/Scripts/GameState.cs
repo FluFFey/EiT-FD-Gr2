@@ -15,7 +15,7 @@ public class GameState : MonoBehaviour {
 	//HUD-ATTRIBUTES
 	int survivors; 
 	List<Job> currentJobs;
-	Dictionary<Seed, int> seeds;
+    Dictionary<Seed, int> seeds;
     List<Specie> knownSpecies;
     List<Specie> unknownSpecies;
 	List<Specie> mySplices { get; set; }
@@ -100,6 +100,21 @@ public class GameState : MonoBehaviour {
 
     public int GetAvailableWorkers(){
         return survivors - this.currentJobs.Sum(j => j.numWorkers);
+    }
+    
+    public Dictionary<Seed, int> getSeeds()
+    {
+        return seeds;
+    }
+
+    public void setSeeds(Seed seed, int numSeeds)
+    {
+        if (seeds.ContainsKey(seed)){
+            seeds[seed] += numSeeds;
+        }
+        else{
+            seeds.Add(seed, numSeeds);
+        }
     }
 
 	//------------------------CALENDAR-STATE-----------------------------

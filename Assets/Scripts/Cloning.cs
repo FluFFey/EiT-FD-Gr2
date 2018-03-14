@@ -4,34 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Cloning : MonoBehaviour{
-    private int workersAllocated;
     private Specie specie;
+    private Seed seed;
 
-    //Initialize variables and GameState
+    //INITIALIZE VARIEBLES AND GAMESTATE
     private void Awake(Specie specie, int numWorkers)
     {
         this.specie = specie;
-        workersAllocated = setWorkersAllocated(numWorkers);
+        seed = new Seed(specie.name + " seed", specie);
+        GameState.instance.setSeeds(seed, CalculateNumSeeds(numWorkers));
     }
 
-    private int setWorkersAllocated(int numWorkers)
-    {
-        //TODO: Implement method
-        throw new NotImplementedException();
-    }
-
-    //Calculate number of seeds from clone job
-    int CalculateNumSeeds(){
-        //Calculation based on people allocated and seeds per person.
-        return 1;
-    }
-
-    //Return key, value in seeds Dictionary in GameState.
-    void InitializeJob(int numWorkers, int id){
-        //True if Job successfully instantiated
-        bool b = GameState.instance.addJob(JobType.CLONE, numWorkers, id);
-        if (b) { CalculateNumSeeds(); }
-    }
-    
+    //CALCULATE NUMBER OF SEEDS TO OUTPUT FROM CLONE JOB
+    //TODO: Upgrade calclulation formula?
+    public int CalculateNumSeeds(int workersAllocated){
+        return specie.seedsPerWorker * workersAllocated;
+    }   
 
 }
