@@ -13,9 +13,10 @@ public class Specie {
 	//TODO: ADD NEGATIVE PROPS? 
 	public Sprite image { get; set;}
 	public Rarity rarity { get; set;}
+    public Type type { get; set; }
 	public bool edible { get; set;}
 
-	public Specie (string name, int foodPoint, int durability, int growTime, List<DisasterProperty> properties, Sprite image, int seedsPerWorker,int tag, Rarity rarity)
+	public Specie (string name, int foodPoint, int durability, int growTime, List<DisasterProperty> properties, Sprite image, int seedsPerWorker,int tag, Rarity rarity, Type type)
 	{
 		this.name = name;
 		this.foodPoint = foodPoint;
@@ -25,6 +26,7 @@ public class Specie {
 		this.seedsPerWorker = seedsPerWorker;
 		this.image = image;
 		this.rarity = rarity;
+        this.type = type;
 		this.edible = false;
 	}
 
@@ -39,4 +41,7 @@ public class Specie {
 		COMMON, RARE, EPIC, LEGENDARY
 	}
 
+    public enum Type {
+        FOREST, WATER
+    }
 }

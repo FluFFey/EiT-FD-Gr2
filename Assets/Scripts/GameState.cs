@@ -18,6 +18,7 @@ public class GameState : MonoBehaviour {
     Dictionary<Seed, int> seeds;
     List<Specie> knownSpecies;
     List<Specie> unknownSpecies;
+    List<Specie> allSpecies;
 	List<Specie> mySplices { get; set; }
 
 	//CALENDAR-ATTRIBUTES
@@ -30,9 +31,11 @@ public class GameState : MonoBehaviour {
 	Specie[] baseSpecies = { new Specie() , new Specie(), new Specie(), new Specie(), new Specie()};
 	//Unknown species
 	Specie[] undiscoveredSpecies = { new Specie() , new Specie(), new Specie(), new Specie(), new Specie()};
+    //All species
 
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start () {
 	}
 	
 	// Update is called once per frame
@@ -56,7 +59,10 @@ public class GameState : MonoBehaviour {
 
 		//init Species-State
 		this.knownSpecies = new List<Specie>(baseSpecies); 
-		this.unknownSpecies = new List<Specie>(undiscoveredSpecies); 
+		this.unknownSpecies = new List<Specie>(undiscoveredSpecies);
+        //FIXME: There probably is a better way to init all species.
+        this.allSpecies = new List<Specie>(knownSpecies);
+        this.allSpecies.AddRange(unknownSpecies); 
 		this.mySplices = new List <Specie>();
 
 		//init Calendar-State
@@ -82,14 +88,25 @@ public class GameState : MonoBehaviour {
 		this.currentJobs = new List<Job>();
 	}
 
-    //Getters and setters
+    //GETTERS AND SETTERS
     public List<Specie> GetKnownSpecies()
     {
         return knownSpecies;
     }
     public void AddKnownSpecies(Specie specie){
         this.knownSpecies.Add(specie);
+        this.unknownSpecies.Remove(specie);
     }
+
+    public List<Specie> GetUnknownSpecies(){
+        return unknownSpecies;
+    }
+
+    public List<Specie> GetAllSpecies()
+    {
+        return allSpecies;
+    }
+
     public List<Specie> GetMySplices(){
         return mySplices;
     }
