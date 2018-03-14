@@ -141,8 +141,8 @@ public class GameState : MonoBehaviour {
 
 
 		// ADD ACTIVATION OF A NATURAL DISASTER IF PRESENT
-		if (checkDisaster (3)) {
-			checkSeedResistance(3);
+		if (checkDisaster (daysPassed)) {
+			checkSeedResistance(daysPassed);
 			//TODO: NOTIFY?
 		}
 			
