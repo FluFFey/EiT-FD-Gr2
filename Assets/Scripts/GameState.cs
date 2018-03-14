@@ -269,5 +269,16 @@ public class GameState : MonoBehaviour {
 		return false;
 	}
 
+    public void getHUDData(out int outSurvivors, out int outNumberOfWorkers, out int outDaysPassed)
+    {
+        outSurvivors = survivors;
+        outNumberOfWorkers = 0;
+        foreach (Job job in currentJobs)
+        {
+            outNumberOfWorkers += job.numWorkers;
+        }
+        outDaysPassed = daysPassed;
+    }
+
 }
 
