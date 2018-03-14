@@ -278,6 +278,7 @@ public class GameState : MonoBehaviour {
             outNumberOfWorkers += job.numWorkers;
         }
         outDaysPassed = daysPassed;
+
     }
 
 }

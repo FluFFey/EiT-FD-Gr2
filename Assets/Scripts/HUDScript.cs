@@ -8,14 +8,16 @@ public class HUDScript : MonoBehaviour {
 
     Text survivorsText;
     Text workersText;
+    Text requiredFoodText;
     Text daysText;
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
         survivorsText = transform.GetChild(0).transform.GetChild(0).GetComponent<Text>();
         workersText = transform.GetChild(1).transform.GetChild(0).GetComponent<Text>();
-        daysText = transform.GetChild(2).transform.GetChild(0).GetComponent<Text>();
-
+        requiredFoodText = transform.GetChild(2).transform.GetChild(0).GetComponent<Text>();
+        daysText = transform.GetChild(3).transform.GetChild(0).GetComponent<Text>();
     }
 
 	// Update is called once per frame
@@ -28,7 +30,9 @@ public class HUDScript : MonoBehaviour {
             GameState.instance.getHUDData(out numberOfSurvivors, out numberOfWorkers, out numberOfDaysPassed);
             survivorsText.text = numberOfSurvivors.ToString();
             workersText.text = numberOfWorkers.ToString();
-            daysText.text = numberOfWorkers.ToString();
+            //TODO: update with food eaten
+            requiredFoodText.text = "0/" + (numberOfSurvivors * GameState.FOOD_POINT_PER_WORKER).ToString();
+            daysText.text = numberOfDaysPassed.ToString(); 
         }
 	}
 }
