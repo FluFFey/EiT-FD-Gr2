@@ -12,30 +12,40 @@ public class GameState : MonoBehaviour {
 
 	public static GameState instance;
 
+	//TODO: UPDATE BASED ON AUDUNS DRAWING
+	public const int IMAGE_WIDTH = 5;
+	public const int DISASTER_INTERVAL = 4;
+	public const int TOTAL_DAYS = 20;
+	public const int FOOD_POINT_PER_WORKER = 2;
+
 	//HUD-ATTRIBUTES
 	int survivors; 
 	List<Job> currentJobs;
     Dictionary<Seed, int> seeds;
-    List<Specie> knownSpecies;
+    public List<Specie> knownSpecies;
     List<Specie> unknownSpecies;
-    List<Specie> allSpecies;
+    public List<Specie> allSpecies;
 	List<Specie> mySplices { get; set; }
+    int foodPointsConsumed;
 
-	//CALENDAR-ATTRIBUTES
-	int totalDays;
+    //CALENDAR-ATTRIBUTES
+    int totalDays;
 	int daysPassed;
 	Dictionary<int,  NaturalDisaster> naturalDisasters;
 
 	//BASE-SPECIES
 	//TODO: ADD VALUES TO EACH SPECIE. 
-	Specie[] baseSpecies = { new Specie() , new Specie(), new Specie(), new Specie(), new Specie()};
+	Specie[] baseSpecies = { new Specie("tomat") , new Specie("fesk"), new Specie("gulrot"), new Specie("kjøtt"), new Specie("ku")};
 	//Unknown species
 	Specie[] undiscoveredSpecies = { new Specie() , new Specie(), new Specie(), new Specie(), new Specie()};
     //All species
 
+	// FARM-ATTRIBUTES.
+	Dictionary<int, Seed> plantedSeeds;
 
-    // Use this for initialization
-    void Start () {
+	// Use this for initialization
+	void Start () {
+
 	}
 	
 	// Update is called once per frame
@@ -52,12 +62,13 @@ public class GameState : MonoBehaviour {
 		}
 		DontDestroyOnLoad (this);
 
-		//init HUD-State
+		// init HUD-State
 		this.survivors = 10;
 		this.currentJobs = new List<Job> ();
 		this.seeds = new Dictionary<Seed, int>();
 
-		//init Species-State
+
+		// init Species-State
 		this.knownSpecies = new List<Specie>(baseSpecies); 
 		this.unknownSpecies = new List<Specie>(undiscoveredSpecies);
         //FIXME: There probably is a better way to init all species.
@@ -65,13 +76,21 @@ public class GameState : MonoBehaviour {
         this.allSpecies.AddRange(unknownSpecies); 
 		this.mySplices = new List <Specie>();
 
-		//init Calendar-State
+		// init Calendar-State
 		this.naturalDisasters = new Dictionary<int, NaturalDisaster>();
+		this.totalDays = TOTAL_DAYS; //FIXME: Set correctly
+
+		// init Farm-State
+		this.plantedSeeds = new Dictionary<int, Seed>();
+
+		// Set disasters at given interval
+
+		setDisasters (DISASTER_INTERVAL);
 
 	}
 
 	// -------------------------JOB-METHODS--------------------------------------
-	bool addJob(JobType jobType, int numWorkers, int id) {
+	public bool addJob(JobType jobType, int numWorkers, int id) {
 		//if insufficient survivors or available workers -> cancel job.
 		if ((survivors - this.currentJobs.Sum(j => j.numWorkers)) < numWorkers) {
 			return false;
@@ -80,10 +99,10 @@ public class GameState : MonoBehaviour {
 			this.currentJobs.Add(new Job(jobType, id, numWorkers));
 			return true;
 		}
-	}
+	}	
 
 	//TO BE TRIGGED WHEN NEXT DAY IS PRESSED. 
-	void resetJobs() {
+	public 	void resetJobs() {
 		//new day, new jobs.
 		this.currentJobs = new List<Job>();
 	}
@@ -137,17 +156,52 @@ public class GameState : MonoBehaviour {
 	//------------------------CALENDAR-STATE-----------------------------
 
 	public void pressNextDay() {
-		// ADD DEATHLOGIC
+		// DEATHLOGIC. TODO: Apply return value in window?
+		print("Num dead = " + (this.survivors-calculateSurvivors()));
 
 		// ADD ACTIVATION OF A NATURAL DISASTER IF PRESENT
-		checkDisaster(daysPassed);
+		if (checkDisaster (daysPassed)) {
+			checkSeedResistance(daysPassed);
+			//TODO: NOTIFY?
+		}
+			
+		// Seeds have now grown for another day. Some may even be ripe. 
+		incrementSeedDaysGrown ();
 
-		// INCEREMENT DAY
+		// INCEREMENT DAY AND RESET FOODPOINTSCONSUMED
 		daysPassed++;
+		this.foodPointsConsumed = 0;
+
+		//TODO: CHECK IF ANY SEEDS ARE RIPE.
 
 		// ADD LOGIC TO CHECK IF GAME IS WON/OVER.
 	}
 
+	// method that loops through each seed and checks it corresponding resitances vs the disastertype.
+	// if no resitance it removes the seed from plantedSeeds
+	public void checkSeedResistance(int disasterDay) {
+		NaturalDisaster disasterType = this.naturalDisasters[disasterDay];
+		//loop through all seeds and check resistance.
+		List<int> removableItems = new List<int>();
+		foreach (var item in this.plantedSeeds) {
+			bool resistant = false;
+			foreach (DisasterProperty resistance in item.Value.specie.resistantProperties) {
+				if (resistance == disasterType.property) {
+					resistant = true;
+					break;
+				}
+			}
+			//remove seed from item if no resistance
+			if (!resistant) {
+				removableItems.Add(item.Key);
+			}
+		}
+
+		foreach (var key in removableItems) {
+			this.plantedSeeds.Remove (key);
+		}
+
+	}
 
 
 	//SETS PREDEFINED DISASTERS AND ADDS A RANDOM DISASTER TO EACH EVENT.
@@ -173,14 +227,63 @@ public class GameState : MonoBehaviour {
 			}
 		}
 	}
-
-	//TODO: CONSIDER VOID.
+		
 	public bool checkDisaster(int day) {
-		if (this.naturalDisasters.ContainsKey (day)) {
-			//TODO EXECUTE DISASTER LOGIC
-			return true;
+		return this.naturalDisasters.ContainsKey (day);
+	}
+
+	public int calculateSurvivors() {
+		float rest = this.survivors*FOOD_POINT_PER_WORKER - this.foodPointsConsumed;
+		this.survivors = this.survivors - Mathf.CeilToInt (rest / (float)FOOD_POINT_PER_WORKER);
+		return this.survivors;
+	}
+
+
+	//------------------------FARM-STATE-----------------------------
+
+	// plants seed at desired index if available slot
+	public void plantSeed(Seed seed, int index) {
+		if (emptyFarmSlot (index)) {
+			this.plantedSeeds.Add (index, seed);
+		}
+	}
+
+	public bool emptyFarmSlot(int index) {
+		//int x = this.IMAGE_WIDTH % index;
+		//int y = this.IMAGE_WIDTH / index;
+		return this.plantedSeeds.ContainsKey (index);
+	
+	}
+
+	// method that increments number of days grown for each seed. 
+	// to be called when next day is clicked
+	public void incrementSeedDaysGrown() {
+		foreach (Seed seed in this.plantedSeeds.Values) {
+			seed.daysGrown++;
+		}
+	}
+
+	// TODO CONSIDER NON-VOID
+	public void eatFood(int index) {
+			if(checkRipeSeed(index)){
+				Seed seed = this.plantedSeeds[index];
+				this.plantedSeeds.Remove(index);
+				Specie food = seed.specie;
+				this.foodPointsConsumed += food.foodPoint;
+			}
+	}
+
+	public bool checkRipeSeed(int index) {
+		if (!emptyFarmSlot (index)) {
+			//TODO: IMPLEMENT DURABILITY ALSO? WHERE TO SET EDIBLE? 
+			if (this.plantedSeeds [index].daysGrown >= this.plantedSeeds [index].specie.growTime) {
+				//TODO: IS THIS ATTRIBUTE EVEN NECESSARY?
+				this.plantedSeeds [index].specie.edible = true;
+				return true;
+			}	
 		}
 		return false;
 	}
+
 }
 
