@@ -10,21 +10,27 @@ public class Specie {
 	public int growTime { get; set; }
 	public int seedsPerWorker { get; set; }
 	public List<DisasterProperty> resistantProperties { get; set;}
-	//TODO: ADD NEGATIVE PROPS? 
-	public Sprite image { get; set; }
-	public Rarity rarity { get; set; }
+	public List<PositiveProperty> positiveProperties;
+	public List<NegativeProperty> dormantNegativeProperties;
+	public Sprite image { get; set;}
+	public Rarity rarity { get; set;}
+    public Type type { get; set; }
 	public bool edible { get; set;}
 
-	public Specie (string name, int foodPoint, int durability, int growTime, List<DisasterProperty> properties, Sprite image, int seedsPerWorker,int tag, Rarity rarity)
+
+	public Specie (string name, int foodPoint, int durability, int growTime, List<DisasterProperty> properties, List<PositiveProperty> positiveProps, List<NegativeProperty> negativeProps, Sprite image, int seedsPerWorker,int tag, Rarity rarity, Type type)
 	{
 		this.name = name;
 		this.foodPoint = foodPoint;
 		this.durability = durability;
 		this.growTime = growTime;
 		this.resistantProperties = properties;
+		this.positiveProperties = positiveProps;
+		this.dormantNegativeProperties = negativeProps;
 		this.seedsPerWorker = seedsPerWorker;
 		this.image = image;
 		this.rarity = rarity;
+        this.type = type;
 		this.edible = false;
 	}
 
@@ -43,4 +49,21 @@ public class Specie {
 		COMMON, RARE, EPIC, LEGENDARY
 	}
 
+    //Type determining where the specie can be found.
+    public enum Type {
+        FOREST, WATER
+    }
+
+	// PROPERTIES WHICH MAY(!) BE TRANSFERED TO NEW SPLICE
+	public enum PositiveProperty { 
+		//TODO: INSERTall properties
+		EXTRA_FOOD_POINT, LESS_GROWTIME, EXTRA_DURABILITY, EXTRA_SEED_PER_WORKER
+	}
+
+	// NEGATIVE PROPERTIES WHICH MAY(!) BE TRANSFERED TO NEW SPLICE
+	public enum NegativeProperty { 
+		//TODO: POISONOUS? OTHER PROPS?
+		REMOVES_RANDOM_RESISTANCE, LESS_FOOD_POINT, EXTRA_GROWTIME, LESS_DURABILITY, EXTRA_SEED_PER_WORKER
+	}
+    
 }
