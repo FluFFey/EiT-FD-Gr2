@@ -13,9 +13,9 @@ public class GameState : MonoBehaviour {
 	int survivors; 
 	List<Job> currentJobs;
 	Dictionary<Seed, int> seeds;
-	List<Specie> knownSpecies;
-	List<Specie> unknownSpecies;
-	List<Specie> mySplices;
+    List<Specie> knownSpecies;
+    List<Specie> unknownSpecies;
+	List<Specie> mySplices { get; set; }
 
 	//BASE-SPECIES
 	//TODO: ADD VALUES TO EACH SPECIE. 
@@ -56,7 +56,7 @@ public class GameState : MonoBehaviour {
 
 	// JOB-METHODS -------------------------------------------------------------
 
-	bool addJob(JobType jobType, int numWorkers, int id) {
+	public bool addJob(JobType jobType, int numWorkers, int id) {
 		//if insufficient survivors or available workers -> cancel job.
 		if ((survivors - this.currentJobs.Sum(j => j.numWorkers)) < numWorkers) {
 			return false;
@@ -72,7 +72,26 @@ public class GameState : MonoBehaviour {
 		//new day, new jobs.
 		this.currentJobs = new List<Job>();
 	}
-		
+
+    //Getters and setters
+    public List<Specie> GetKnownSpecies()
+    {
+        return knownSpecies;
+    }
+    public void AddKnownSpecies(Specie specie){
+        this.knownSpecies.Add(specie);
+    }
+    public List<Specie> GetMySplices(){
+        return mySplices;
+    }
+    public void AddMySplices(Specie specie)
+    {
+        this.mySplices.Add(specie);
+    }
+
+    public int GetAvailableWorkers(){
+        return survivors - this.currentJobs.Sum(j => j.numWorkers);
+    }
 
 }
 
