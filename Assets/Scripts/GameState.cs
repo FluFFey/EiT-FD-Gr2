@@ -123,7 +123,10 @@ public class GameState : MonoBehaviour {
 		// ADD DEATHLOGIC
 
 		// ADD ACTIVATION OF A NATURAL DISASTER IF PRESENT
-		checkDisaster(daysPassed);
+		if (checkDisaster (daysPassed)) {
+			//TODO: loop through all seeds and check if resistant. Remove if not. Add to a info-table?
+
+		}
 
 		// INCEREMENT DAY
 		daysPassed++;
