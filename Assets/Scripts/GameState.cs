@@ -94,7 +94,7 @@ public class GameState : MonoBehaviour {
 			this.currentJobs.Add(new Job(jobType, id, numWorkers));
 			return true;
 		}
-	}
+	}	
 
 	//TO BE TRIGGED WHEN NEXT DAY IS PRESSED. 
 	public 	void resetJobs() {
