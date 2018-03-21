@@ -36,6 +36,7 @@ public class GameState : MonoBehaviour {
 	//BASE-SPECIES
 	//TODO: ADD VALUES TO EACH SPECIE. 
 	Specie[] baseSpecies = { new Specie("tomat") , new Specie("fesk"), new Specie("gulrot"), new Specie("kjøtt"), new Specie("ku"), new Specie("ikke kjætt"), new Specie("en Gr0nnsak"), new Specie("Genmodifisert Tre"), new Specie("Pannekakedeig") };
+    
 	//Unknown species
 	Specie[] undiscoveredSpecies = { new Specie() , new Specie(), new Specie(), new Specie(), new Specie()};
     //All species
@@ -43,13 +44,8 @@ public class GameState : MonoBehaviour {
 	// FARM-ATTRIBUTES.
 	Dictionary<int, Seed> plantedSeeds;
 
-	// Use this for initialization
-	void Start () {
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
 		
 	}
 	
@@ -76,8 +72,15 @@ public class GameState : MonoBehaviour {
         this.allSpecies.AddRange(unknownSpecies); 
 		this.mySplices = new List <Specie>();
 
-		// init Calendar-State
-		this.naturalDisasters = new Dictionary<int, NaturalDisaster>();
+        //TODO: 5 hacky lines. A million ways to solve, but this was by far the fastest
+        mySplices.Add(null);
+        mySplices.Add(null);
+        mySplices.Add(null);
+        mySplices.Add(null);
+        mySplices.Add(null);
+
+        // init Calendar-State
+        this.naturalDisasters = new Dictionary<int, NaturalDisaster>();
 		this.totalDays = TOTAL_DAYS; //FIXME: Set correctly
 
 		// init Farm-State
@@ -89,8 +92,27 @@ public class GameState : MonoBehaviour {
 
 	}
 
-	// -------------------------JOB-METHODS--------------------------------------
-	public bool addJob(JobType jobType, int numWorkers, int id) {
+    void Start()
+    {
+        //temporary. TODO: delete when base species are properly implemented
+        baseSpecies[0].resistantProperties = new List<DisasterProperty>();
+        baseSpecies[1].resistantProperties = new List<DisasterProperty>();
+        baseSpecies[2].resistantProperties = new List<DisasterProperty>();
+
+        baseSpecies[0].resistantProperties.Add(DisasterProperty.EARTHQUAKE);
+        baseSpecies[0].resistantProperties.Add(DisasterProperty.WIND);
+
+        baseSpecies[1].resistantProperties.Add(DisasterProperty.EARTHQUAKE);
+        baseSpecies[1].resistantProperties.Add(DisasterProperty.WIND);
+        baseSpecies[1].resistantProperties.Add(DisasterProperty.WATER);
+
+        baseSpecies[2].resistantProperties.Add(DisasterProperty.WATER);
+
+    }
+
+
+    // -------------------------JOB-METHODS--------------------------------------
+    public bool addJob(JobType jobType, int numWorkers, int id) {
 		//if insufficient survivors or available workers -> cancel job.
 		if ((survivors - this.currentJobs.Sum(j => j.numWorkers)) < numWorkers) {
 			return false;

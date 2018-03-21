@@ -14,7 +14,6 @@ public class LabHandler : MonoBehaviour
     }
     LAB_VIEWS currentView = LAB_VIEWS.LOBBY;
 
-
     //Splice related variables
     public GameObject topLevelSpliceUI;
     public SpliceScreen splicer;
@@ -25,9 +24,15 @@ public class LabHandler : MonoBehaviour
     public GameObject[] spliceMachines;
     public GameObject addSpliceWorkerButton;
     public GameObject removeSpliceWorkerButton;
+    public GameObject mySplicesShelf;
     public GameObject spliceButton;
+    public GameObject leftPropertyScreen;
+    public GameObject rightPropertyScreen;
     private Specie firstInsertedSpecie;
     private Specie secondInsertedSpecie;
+    private TextMesh statsText;
+    private TextMesh numberOfWorkersText;
+    private int selectedSplice;
 
     //Clone related variables
     public GameObject topLevelCloneUI;
@@ -44,8 +49,9 @@ public class LabHandler : MonoBehaviour
     public GameObject draggableObject;
     public GameObject leaveLabDoor;
     private GameObject draggedObject;
-    List<DisasterProperty> chosenProperties;
-    int numberOfWorkers = 0;
+    List<DisasterProperty> chosenDisasterProperties;
+    List<Specie.PositiveProperty> chosenNormalProperties;
+    int numberOfWorkers = 1;
     Coroutine cameraMovementCoroutine; //coroutine for moving camera
     private Vector3 defaultCamPos;
     public Vector3 spliceCamPos;
@@ -54,24 +60,23 @@ public class LabHandler : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        chosenProperties = new List<DisasterProperty>();
+        chosenDisasterProperties = new List<DisasterProperty>();
+        chosenNormalProperties = new List<Specie.PositiveProperty>();
         cameraMovementCoroutine = null;
         foreach (Specie specie in GameState.instance.knownSpecies)
         {
             GameObject newSpecieButton = Instantiate(draggableObject, spliceUIPanel.transform);
             newSpecieButton.GetComponentInChildren<Text>().text = specie.name;
-            print(specie.name);
             newSpecieButton.GetComponent<DragableUI>().setSpecie(specie);
         }
 
-        foreach (Specie specie in GameState.instance.mySplices)
-        {
-            GameObject newSpliceButton = Instantiate(draggableObject, spliceUIPanel.transform);
-            newSpliceButton.GetComponentInChildren<Text>().text = specie.name;
-            print(specie.name);
-            newSpliceButton.GetComponent<DragableUI>().setSpecie(specie);
-        }
-
+        //foreach (Specie specie in GameState.instance.mySplices)
+        //{
+        //    GameObject newSpliceButton = Instantiate(draggableObject, spliceUIPanel.transform);
+        //    newSpliceButton.GetComponentInChildren<Text>().text = specie.name;
+        //    print(specie.name);
+        //    newSpliceButton.GetComponent<DragableUI>().setSpecie(specie);
+        //}
 
         topLevelSpliceUI.SetActive(false);
         topLevelCloneUI.SetActive(false);
@@ -79,7 +84,11 @@ public class LabHandler : MonoBehaviour
         firstInsertedSpecie = null;
         secondInsertedSpecie = null;
         specieToClone = null;
+        numberOfWorkersText = GameObject.Find("numberOfAssignedWorkers").GetComponent<TextMesh>();
+        updateNumberOfWorkersDisplay();
+        statsText = GameObject.Find("randomStatsText").GetComponent<TextMesh>();
         defaultCamPos = Camera.main.transform.position;
+        selectedSplice = -1;
     }
 
     // Update is called once per frame
@@ -106,29 +115,23 @@ public class LabHandler : MonoBehaviour
     /// </summary>
     private void handleLabLobbyInput()
     {
-        if (leaveLabDoor.GetComponent<MouseOverObj>().isMouseOver)
+        if (Input.GetMouseButtonDown(0))
         {
-            //TODO: add visualization of  mouse over
-            if (Input.GetMouseButtonDown(0))
+            if (leaveLabDoor.GetComponent<MouseOverObj>().isMouseOver)
             {
+                //TODO: add visualization of  mouse over
                 SceneHandler.instance.changeScene(SceneHandler.SCENES.OVERWORLD);
             }
-        }
-        if (cloneGO.GetComponent<MouseOverObj>().isMouseOver)
-        {
-            //TODO: add visualization of  mouse over
-            if (Input.GetMouseButtonDown(0))
+            if (cloneGO.GetComponent<MouseOverObj>().isMouseOver)
             {
-                numberOfWorkers = 0;
+                //TODO: add visualization of  mouse over
+                numberOfWorkers = 1;
                 switchToClone();
             }
-        }
-        if (spliceGO.GetComponent<MouseOverObj>().isMouseOver)
-        {
-            //TODO: add visualization of  mouse over
-            if (Input.GetMouseButtonDown(0))
+            if (spliceGO.GetComponent<MouseOverObj>().isMouseOver)
             {
-                numberOfWorkers = 0;
+                //TODO: add visualization of  mouse over
+                numberOfWorkers = 1;
                 switchToSplice();
             }
         }
@@ -138,51 +141,121 @@ public class LabHandler : MonoBehaviour
     /// </summary>
     private void handleCloneInput()
     {
-        if (leaveCloning.GetComponent<MouseOverObj>().isMouseOver)
+        if (Input.GetMouseButtonDown(0))
         {
             //TODO: add visualization of  mouse over
-            if (Input.GetMouseButtonDown(0))
+            if (leaveCloning.GetComponent<MouseOverObj>().isMouseOver)
             {
                 switchToMainLab();
             }
-        }
 
-        if (addCloneWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
-        {
-            if (Input.GetMouseButtonDown(0))
+            if (addCloneWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
             {
                 numberOfWorkers++;
+                updateNumberOfWorkersDisplay();
             }
-        }
 
-        if (removeCloneWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
-        {
-            if (Input.GetMouseButtonDown(0))
+            if (removeCloneWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
             {
                 numberOfWorkers--;
+                updateNumberOfWorkersDisplay();
             }
-        }
 
-        if (cloneMachine.GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
-        {
-            if (Input.GetMouseButtonDown(0))
+            if (cloneMachine.GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
             {
                 specieToClone = draggedObject.GetComponent<DragableUI>().getSpecie();
             }
-        }
 
-        if (cloneButton.GetComponent<MouseOverObj>().isMouseOver && specieToClone != null)
-        {
-            if (Input.GetMouseButtonDown(0))
+            if (cloneButton.GetComponent<MouseOverObj>().isMouseOver && specieToClone != null)
             {
-                if (GameState.instance.addJob(JobType.CLONE,numberOfWorkers, 0))
+                if (GameState.instance.addJob(JobType.CLONE, numberOfWorkers, 0))
                 {
                     cloner.Clone(specieToClone, numberOfWorkers);
                 }
                 numberOfWorkers = 0;
             }
-        }
 
+        }
+    }
+
+    void updateNumberOfWorkersDisplay()
+    {
+        numberOfWorkers = numberOfWorkers > 3 ? 3 : numberOfWorkers;
+        numberOfWorkers = numberOfWorkers < 1 ? 1 : numberOfWorkers;
+        numberOfWorkersText.text = ((int)numberOfWorkers / 10).ToString() + " " + ((int)numberOfWorkers % 10).ToString();
+    }
+
+    void handlePropertySelection()
+    {
+        //TODO: add graphics for showing a button is pushed down
+        for (int i = 0; i < leftPropertyScreen.transform.childCount; i++)
+        {
+            if (leftPropertyScreen.transform.GetChild(i).GetComponent<MouseOverObj>().isMouseOver)
+            {
+                if (i < firstInsertedSpecie.resistantProperties.Count)
+                {
+                    //basically toggling. TODO: Add dynamic function for this and other property type(s)
+                    if (chosenDisasterProperties.Contains(firstInsertedSpecie.resistantProperties[i]))
+                    {
+                      //  print("leftresistance removed");
+                        chosenDisasterProperties.Remove(firstInsertedSpecie.resistantProperties[i]);
+                    }
+                    else
+                    {
+                    //    print("leftresistance added");
+                        chosenDisasterProperties.Add(firstInsertedSpecie.resistantProperties[i]);
+                    }
+                }
+                else
+                {
+                    int normalPropertyNr = i - firstInsertedSpecie.resistantProperties.Count;
+                    if (chosenNormalProperties.Contains(firstInsertedSpecie.positiveProperties[normalPropertyNr]))
+                    {
+                    //    print("leftnormal removed");
+                        chosenNormalProperties.Remove(firstInsertedSpecie.positiveProperties[normalPropertyNr]);
+                    }
+                    else
+                    {
+                    //    print("leftnormal added");
+                        chosenNormalProperties.Add(firstInsertedSpecie.positiveProperties[i]);
+                    }
+                    //chosenNormalProperties.Add(firstInsertedSpecie.positiveProperties[i - firstInsertedSpecie.resistantProperties.Count]);
+                }
+            }
+            //ASSUMING BOTH PROPERTY SCREENS HAVE SAME NUMBER OF CHILDREN(which they should
+            if (rightPropertyScreen.transform.GetChild(i).GetComponent<MouseOverObj>().isMouseOver)
+            {
+                if (i < secondInsertedSpecie.resistantProperties.Count)
+                {
+                    //basically toggling. TODO: Add dynamic function for this and other property type(s)
+                    if (chosenDisasterProperties.Contains(secondInsertedSpecie.resistantProperties[i]))
+                    {
+                     //   print("rightresistance removed");
+                        chosenDisasterProperties.Remove(secondInsertedSpecie.resistantProperties[i]);
+                    }
+                    else
+                    {
+                      //  print("rightresistance added");
+                        chosenDisasterProperties.Add(secondInsertedSpecie.resistantProperties[i]);
+                    }
+                }
+                else
+                {
+                    int normalPropertyNr = i - secondInsertedSpecie.resistantProperties.Count;
+                    if (chosenNormalProperties.Contains(secondInsertedSpecie.positiveProperties[normalPropertyNr]))
+                    {
+                      //  print("rightnormal removed");
+                        chosenNormalProperties.Remove(secondInsertedSpecie.positiveProperties[normalPropertyNr]);
+                    }
+                    else
+                    {
+                       // print("rightNormal added");
+                        chosenNormalProperties.Add(secondInsertedSpecie.positiveProperties[i]);
+                    }
+                    //chosenNormalProperties.Add(firstInsertedSpecie.positiveProperties[i - firstInsertedSpecie.resistantProperties.Count]);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -190,67 +263,78 @@ public class LabHandler : MonoBehaviour
     /// </summary>
     private void handleSpliceInput()
     {
-        if (leaveSplicing.GetComponent<MouseOverObj>().isMouseOver)
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
+            if (leaveSplicing.GetComponent<MouseOverObj>().isMouseOver)
             {
                 switchToMainLab();
             }
-        }
 
-        if (addSpliceWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
-        {
-            if (Input.GetMouseButtonDown(0))
+            if (addSpliceWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
             {
                 numberOfWorkers++;
+                updateNumberOfWorkersDisplay();
             }
-        }
 
-        if (removeSpliceWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
-        {
-            if (Input.GetMouseButtonDown(0))
+            if (removeSpliceWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
             {
                 numberOfWorkers--;
+                updateNumberOfWorkersDisplay();
             }
+
+            if (spliceButton.GetComponent<MouseOverObj>().isMouseOver && 
+                firstInsertedSpecie != null && 
+                secondInsertedSpecie != null && 
+                selectedSplice != -1) //is -1 when nothing is scene is initiated
+            {
+                if (GameState.instance.addJob(JobType.SPLICE, numberOfWorkers, 1))
+                {
+                    splicer.spliceSpecies(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers, chosenDisasterProperties);
+                }
+            }
+            handlePropertySelection();
+            updateSyringe();
+            findSelectedCustomSplice();
         }
+
         if (Input.GetMouseButtonUp(0))
         {
 
             if (spliceMachines[0].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
             {
-                chosenProperties.Clear();
-                splicer.setFirstSpecie(draggedObject.GetComponent<DragableUI>().getSpecie());
+                chosenDisasterProperties.Clear();
+                firstInsertedSpecie = draggedObject.GetComponent<DragableUI>().getSpecie();
                 spliceMachines[0].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
-                //better handled from splicer probably
-                //if (secondInsertedSpecie != null)
-                //{
-                //    //instantiate screen to select shit from
-                //}
+                splicer.updateStatsDisplay(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers);
             }
 
             if (spliceMachines[1].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
             {
-                chosenProperties.Clear();
-                splicer.setSecondSpecie(draggedObject.GetComponent<DragableUI>().getSpecie());
+                chosenDisasterProperties.Clear();
+                secondInsertedSpecie = draggedObject.GetComponent<DragableUI>().getSpecie();
                 spliceMachines[1].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
-                //better handled from splicer probably
-                //if (firstInsertedSpecie != null)
-                //{
-                //    //instantiate screen to select shit from
-                //}
             }
+            splicer.updateStatsDisplay(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers);
             resetDraggedObject();
         }
-        if (spliceButton.GetComponent<MouseOverObj>().isMouseOver && firstInsertedSpecie != null && secondInsertedSpecie != null)
+    }
+
+    private void findSelectedCustomSplice()
+    {
+        //int numberOfCustomSplices;
+        for (int i = 0; i < mySplicesShelf.transform.childCount; i++)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (mySplicesShelf.transform.GetChild(i).GetComponent<MouseOverObj>().isMouseOver)
             {
-                if (GameState.instance.addJob(JobType.SPLICE,numberOfWorkers,1))
-                {
-                    splicer.spliceSpecies(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers, chosenProperties);
-                }
+                selectedSplice = i;
             }
         }
+    }
+
+    private void updateSyringe()
+    {
+        //TODO: Add update to sprøyte here
+        //throw new NotImplementedException();
     }
 
     public void setDraggedObject(GameObject newDraggedObject)
