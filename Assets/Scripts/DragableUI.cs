@@ -91,12 +91,12 @@ public class DragableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return comp;
     }
 
-    internal void setSpecie(Specie newSpecie)
+    public void setSpecie(Specie newSpecie)
     {
         specie = newSpecie;
     }
 
-    internal Specie getSpecie()
+    public Specie getSpecie()
     {
         return specie;
     }

@@ -25,7 +25,7 @@ public class GameState : MonoBehaviour {
     public List<Specie> knownSpecies;
     List<Specie> unknownSpecies;
     public List<Specie> allSpecies;
-	List<Specie> mySplices { get; set; }
+	public List<Specie> mySplices { get; set; }
     int foodPointsConsumed;
 
     //CALENDAR-ATTRIBUTES
@@ -35,7 +35,7 @@ public class GameState : MonoBehaviour {
 
 	//BASE-SPECIES
 	//TODO: ADD VALUES TO EACH SPECIE. 
-	Specie[] baseSpecies = { new Specie("tomat") , new Specie("fesk"), new Specie("gulrot"), new Specie("kjøtt"), new Specie("ku")};
+	Specie[] baseSpecies = { new Specie("tomat") , new Specie("fesk"), new Specie("gulrot"), new Specie("kjøtt"), new Specie("ku"), new Specie("ikke kjætt"), new Specie("en Gr0nnsak"), new Specie("Genmodifisert Tre"), new Specie("Pannekakedeig") };
 	//Unknown species
 	Specie[] undiscoveredSpecies = { new Specie() , new Specie(), new Specie(), new Specie(), new Specie()};
     //All species

@@ -47,6 +47,9 @@ public class LabHandler : MonoBehaviour
     List<DisasterProperty> chosenProperties;
     int numberOfWorkers = 0;
     Coroutine cameraMovementCoroutine; //coroutine for moving camera
+    private Vector3 defaultCamPos;
+    public Vector3 spliceCamPos;
+    public Vector3 cloneCamPos;
 
     // Use this for initialization
     void Awake()
@@ -57,6 +60,7 @@ public class LabHandler : MonoBehaviour
         {
             GameObject newSpecieButton = Instantiate(draggableObject, spliceUIPanel.transform);
             newSpecieButton.GetComponentInChildren<Text>().text = specie.name;
+            print(specie.name);
             newSpecieButton.GetComponent<DragableUI>().setSpecie(specie);
         }
 
@@ -64,6 +68,7 @@ public class LabHandler : MonoBehaviour
         {
             GameObject newSpliceButton = Instantiate(draggableObject, spliceUIPanel.transform);
             newSpliceButton.GetComponentInChildren<Text>().text = specie.name;
+            print(specie.name);
             newSpliceButton.GetComponent<DragableUI>().setSpecie(specie);
         }
 
@@ -74,6 +79,7 @@ public class LabHandler : MonoBehaviour
         firstInsertedSpecie = null;
         secondInsertedSpecie = null;
         specieToClone = null;
+        defaultCamPos = Camera.main.transform.position;
     }
 
     // Update is called once per frame
@@ -93,10 +99,6 @@ public class LabHandler : MonoBehaviour
                 break;
             default:
                 break;
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            resetDraggedObject();
         }
     }
     /// <summary>
@@ -165,7 +167,7 @@ public class LabHandler : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                specieToClone = draggedObject.GetComponent<DragableButton>().getSpecie();
+                specieToClone = draggedObject.GetComponent<DragableUI>().getSpecie();
             }
         }
 
@@ -211,33 +213,34 @@ public class LabHandler : MonoBehaviour
                 numberOfWorkers--;
             }
         }
-
-        if (spliceMachines[0].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
+        if (Input.GetMouseButtonUp(0))
         {
-            if (Input.GetMouseButtonDown(0))
+
+            if (spliceMachines[0].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
             {
                 chosenProperties.Clear();
-                firstInsertedSpecie = draggedObject.GetComponent<DragableButton>().getSpecie();
-                if (secondInsertedSpecie != null)
-                {
-                    //instantiate screen to select shit from
-                }
+                splicer.setFirstSpecie(draggedObject.GetComponent<DragableUI>().getSpecie());
+                spliceMachines[0].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
+                //better handled from splicer probably
+                //if (secondInsertedSpecie != null)
+                //{
+                //    //instantiate screen to select shit from
+                //}
             }
-        }
 
-        if (spliceMachines[1].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
-        {
-            if (Input.GetMouseButtonDown(0))
+            if (spliceMachines[1].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
             {
                 chosenProperties.Clear();
-                secondInsertedSpecie = draggedObject.GetComponent<DragableButton>().getSpecie();
-                if (firstInsertedSpecie != null)
-                {
-                    //instantiate screen to select shit from
-                }
+                splicer.setSecondSpecie(draggedObject.GetComponent<DragableUI>().getSpecie());
+                spliceMachines[1].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
+                //better handled from splicer probably
+                //if (firstInsertedSpecie != null)
+                //{
+                //    //instantiate screen to select shit from
+                //}
             }
+            resetDraggedObject();
         }
-
         if (spliceButton.GetComponent<MouseOverObj>().isMouseOver && firstInsertedSpecie != null && secondInsertedSpecie != null)
         {
             if (Input.GetMouseButtonDown(0))
@@ -271,7 +274,7 @@ public class LabHandler : MonoBehaviour
         {
             StopCoroutine(cameraMovementCoroutine);
         }
-        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(Vector3.back * 5, 2.0f));
+        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(defaultCamPos, 2.0f));
     }
 
     void switchToClone()
@@ -284,7 +287,7 @@ public class LabHandler : MonoBehaviour
         {
             StopCoroutine(cameraMovementCoroutine);
         }
-        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(cloneGO.transform.position - Vector3.forward * 4,2.0f));
+        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(cloneCamPos, 2.0f));
     }
 
     void switchToSplice()
@@ -297,14 +300,13 @@ public class LabHandler : MonoBehaviour
             StopCoroutine(cameraMovementCoroutine);
         }
         
-        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(spliceGO.transform.position - Vector3.forward * 4, 2.0f));
+        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(spliceCamPos, 2.0f));
     }
 
     IEnumerator moveCameraTowards(Vector3 target, float duration = 1.0f)
     {
         Vector3 startPos = Camera.main.transform.position;
         Vector3 moveVector = target - startPos;
-        print(moveVector);
         for (float f =0; f < duration; f+=Time.deltaTime)
         {
             

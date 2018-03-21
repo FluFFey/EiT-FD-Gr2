@@ -5,7 +5,8 @@ using UnityEngine;
 public class SpliceScreen : MonoBehaviour {
 
 	List<int[]> probabilityAttributeTable;
-
+    private Specie firstSpecie;
+    private Specie secondSpecie;
 	// Use this for initialization
 	void Start () {
 		
@@ -23,9 +24,10 @@ public class SpliceScreen : MonoBehaviour {
 		this.probabilityAttributeTable.Add(new int[]{20,50,30});
 		this.probabilityAttributeTable.Add(new int[]{10,50,40});
 		this.probabilityAttributeTable.Add(new int[]{0,0,100});
-
-		//calcAttributes (null, null, 2);
-	}
+        firstSpecie = null;
+        secondSpecie = null;
+        //calcAttributes (null, null, 2);
+    }
 		
 	public Specie spliceSpecies(Specie baseSpecie1, Specie baseSpeice2, int numWorkers, List<DisasterProperty> chosenProps) {
 		//new splice with calculated attributes. 
@@ -88,4 +90,25 @@ public class SpliceScreen : MonoBehaviour {
 	private int getMin(int attr1, int attr2) {
 		return Mathf.Min (attr1, attr2);
 	}
+
+    public Specie getFirstSpecie()
+    {
+        return firstSpecie;
+    }
+
+    public Specie setFirstSpecie()
+    {
+        return secondSpecie;
+    }
+
+    public void setFirstSpecie(Specie specie)
+    {
+        firstSpecie = specie;
+    }
+
+    public void setSecondSpecie(Specie specie)
+    {
+        secondSpecie = specie;
+    }
+
 }
