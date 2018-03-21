@@ -7,7 +7,6 @@ public class SpliceScreen : MonoBehaviour {
 	List<int[]> probabilityAttributeTable;
     private Specie firstSpecie;
     private Specie secondSpecie;
-	//    this for initialization
 
 	// NEEDLE-CONSTANTS
 	private const int postivePopertyCost = 2;
@@ -20,7 +19,7 @@ public class SpliceScreen : MonoBehaviour {
 	private const int thirdLeftOverStaminaProb = 30;
 	private const int lastLeftOverStaminaProb = 10;
 
-
+	//    this for initialization
 	void Start () {
 		
 	}
