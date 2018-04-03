@@ -175,6 +175,14 @@ public class GameState : MonoBehaviour {
         }
     }
 
+    public int getFoodPointsConsumed(){
+        return this.foodPointsConsumed;
+    }
+
+    public void addFoodPointsConsumed(int fp){
+        this.foodPointsConsumed += fp;
+    }
+
 	//------------------------CALENDAR-STATE-----------------------------
 
 	public void pressNextDay() {

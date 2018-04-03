@@ -28,9 +28,11 @@ public class LabHandler : MonoBehaviour
     public GameObject spliceButton;
     public GameObject leftPropertyScreen;
     public GameObject rightPropertyScreen;
+    public Sprite displayButtonDownSprite;
+    public Sprite displayButtonUpSprite;
     private Specie firstInsertedSpecie;
     private Specie secondInsertedSpecie;
-    private TextMesh statsText;
+    //private TextMesh statsText;
     private TextMesh numberOfWorkersText;
     private int selectedSplice;
 
@@ -86,7 +88,7 @@ public class LabHandler : MonoBehaviour
         specieToClone = null;
         numberOfWorkersText = GameObject.Find("numberOfAssignedWorkers").GetComponent<TextMesh>();
         updateNumberOfWorkersDisplay();
-        statsText = GameObject.Find("randomStatsText").GetComponent<TextMesh>();
+        //statsText = GameObject.Find("randomStatsText").GetComponent<TextMesh>();
         defaultCamPos = Camera.main.transform.position;
         selectedSplice = -1;
     }
@@ -289,7 +291,7 @@ public class LabHandler : MonoBehaviour
             {
                 if (GameState.instance.addJob(JobType.SPLICE, numberOfWorkers, 1))
                 {
-                    splicer.spliceSpecies(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers, chosenDisasterProperties);
+                    splicer.spliceSpecies(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers, chosenDisasterProperties,chosenNormalProperties);
                 }
             }
             handlePropertySelection();
@@ -299,21 +301,32 @@ public class LabHandler : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-
-            if (spliceMachines[0].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
+            //Placing species in specie slots if mouse is over
+            for (int i =0; i < 2; i++)
             {
-                chosenDisasterProperties.Clear();
-                firstInsertedSpecie = draggedObject.GetComponent<DragableUI>().getSpecie();
-                spliceMachines[0].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
-                splicer.updateStatsDisplay(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers);
+                if (spliceMachines[i].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
+                {
+                    chosenDisasterProperties.Clear();
+                    firstInsertedSpecie = draggedObject.GetComponent<DragableUI>().getSpecie();
+                    spliceMachines[i].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
+                    splicer.updateStatsDisplay(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers);
+                }
             }
+            //TODO: DELETE LATER. (this should not be necessary anymore, but keeping for test)
+            //if (spliceMachines[0].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
+            //{
+            //    chosenDisasterProperties.Clear();
+            //    firstInsertedSpecie = draggedObject.GetComponent<DragableUI>().getSpecie();
+            //    spliceMachines[0].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
+            //    splicer.updateStatsDisplay(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers);
+            //}
 
-            if (spliceMachines[1].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
-            {
-                chosenDisasterProperties.Clear();
-                secondInsertedSpecie = draggedObject.GetComponent<DragableUI>().getSpecie();
-                spliceMachines[1].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
-            }
+            //if (spliceMachines[1].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
+            //{
+            //    chosenDisasterProperties.Clear();
+            //    secondInsertedSpecie = draggedObject.GetComponent<DragableUI>().getSpecie();
+            //    spliceMachines[1].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
+            //}
             splicer.updateStatsDisplay(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers);
             resetDraggedObject();
         }

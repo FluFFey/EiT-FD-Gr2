@@ -11,7 +11,7 @@ public class Specie {
 	public int seedsPerWorker { get; set; }
 	public List<DisasterProperty> resistantProperties { get; set;}
 	public List<PositiveProperty> positiveProperties;
-	public List<NegativeProperty> dormantNegativeProperties;
+	public List<NegativeProperty> negativeProperties;
 	public Sprite image { get; set;}
 	public Rarity rarity { get; set;}
     public Type type { get; set; }
@@ -26,7 +26,7 @@ public class Specie {
 		this.growTime = growTime;
 		this.resistantProperties = properties;
 		this.positiveProperties = positiveProps;
-		this.dormantNegativeProperties = negativeProps;
+		this.negativeProperties = negativeProps;
 		this.seedsPerWorker = seedsPerWorker;
 		this.image = image;
 		this.rarity = rarity;
@@ -44,6 +44,10 @@ public class Specie {
     //FIXME: TEMP FIX UNTIL BASESPECIES IS SET IN GAMESTATE.
 
 
+	public void removeRandomResitance() {
+		// TODO: CHECK -1?
+		this.resistantProperties.RemoveAt(UnityEngine.Random.Range(0,resistantProperties.Count));
+	}
 
     public enum Rarity {
 		COMMON, RARE, EPIC, LEGENDARY
@@ -54,7 +58,10 @@ public class Specie {
         FOREST, WATER
     }
 
-	// PROPERTIES WHICH MAY(!) BE TRANSFERED TO NEW SPLICE
+	// PROPERTIES. NOTE: THESE PROPERTIES IS ONLY APPLIED WHEN SPLICING AND WILL 
+	// ONLY AFFECT THE ATTRIBUTES FOR THE NEW SPECIE
+
+	// POSITIVE PROPERTIES WHICH MAY(!) BE TRANSFERED TO NEW SPLICE
 	public enum PositiveProperty { 
 		//TODO: INSERTall properties
 		EXTRA_FOOD_POINT, LESS_GROWTIME, EXTRA_DURABILITY, EXTRA_SEED_PER_WORKER
@@ -63,7 +70,7 @@ public class Specie {
 	// NEGATIVE PROPERTIES WHICH MAY(!) BE TRANSFERED TO NEW SPLICE
 	public enum NegativeProperty { 
 		//TODO: POISONOUS? OTHER PROPS?
-		REMOVES_RANDOM_RESISTANCE, LESS_FOOD_POINT, EXTRA_GROWTIME, LESS_DURABILITY, EXTRA_SEED_PER_WORKER
+		REMOVES_RANDOM_RESISTANCE, LESS_FOOD_POINT, EXTRA_GROWTIME, LESS_DURABILITY, LESS_SEED_PER_WORKER
 	}
     
 }
