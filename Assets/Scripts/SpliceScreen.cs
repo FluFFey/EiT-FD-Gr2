@@ -9,10 +9,10 @@ public class SpliceScreen : MonoBehaviour {
     //private Specie firstSpecie;
     //private Specie secondSpecie;
 
-	// NEEDLE-CONSTANTS
-	private const int postivePopertyCost = 2;
-	private const int disasterPropertyCost = 3;
-	private const int workerValue = 4;
+    // NEEDLE-CONSTANTS(Don't think they can be constant when accessed as public
+    public /*const*/ int postivePopertyCost = 2;
+    public /*const*/ int disasterPropertyCost = 3;
+	public /*const*/ int workerValue = 4;
 	// Probabilities for generating negative properties for each amount of stamina threshold
 	// TODO: BETTER NAMING
 	private const int firstLeftOverStaminaProb = 70; 
@@ -20,14 +20,18 @@ public class SpliceScreen : MonoBehaviour {
 	private const int thirdLeftOverStaminaProb = 30;
 	private const int lastLeftOverStaminaProb = 10;
 
-    TextMesh statsTextMesh;
-    GameObject leftPropertyDisplay;
-    GameObject rightPropertyDisplay;
+    //Property buttons. Should probably not be here, but is faster to implement
+    public Sprite propertyButtonUp;
+    public Sprite propertyButtonDown;
+
+    public TextMesh spliceStatsTextMesh;
+    public GameObject leftPropertyDisplay;
+    public GameObject rightPropertyDisplay;
     // Use this for initialization
     void Start () {
-        statsTextMesh = GameObject.Find("spliceStatsText").GetComponent<TextMesh>();
-        leftPropertyDisplay = GameObject.Find("propertiesLeft");
-        rightPropertyDisplay = GameObject.Find("propertiesRight");
+        //spliceStatsTextMesh = GameObject.Find("spliceStatsText").GetComponent<TextMesh>();
+        //leftPropertyDisplay = GameObject.Find("propertiesLeft");
+        //rightPropertyDisplay = GameObject.Find("propertiesRight");
 
     }
 	
@@ -161,7 +165,7 @@ public class SpliceScreen : MonoBehaviour {
 	public Specie calcAttributes(Specie baseSpecie1, Specie baseSpecie2, int numWorkers, bool alwaysAverageValues = false) {
 
 		Specie splicedSpecie = new Specie();
-
+        splicedSpecie.name = GameState.instance.getSpecieName(baseSpecie1.name, baseSpecie2.name);
         double threshold;
 		
         if (alwaysAverageValues)
@@ -284,24 +288,28 @@ public class SpliceScreen : MonoBehaviour {
         int numberOfPossibleProperties = 5;
         for (int i = 0; i < numberOfPossibleProperties; i++)
         {
+           // print(i);
             monitor.transform.GetChild(i).GetComponent<TextMesh>().text = "";
             monitor.transform.GetChild(i).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = null;
         }
 
         int counter = 0;
-        //TODO: which positive properties can you select? Add exceptions to this loop
-        //foreach (Specie.PositiveProperty property in specie.positiveProperties)
-        //{
-        //    monitor.transform.GetChild(i).GetComponent<TextMesh>().text = getPropertyName(property);
-        //    i++;
-        //}
-        
+
         foreach (DisasterProperty property in specie.resistantProperties)
         {
             monitor.transform.GetChild(counter).GetComponent<TextMesh>().text = getPropertyName(property);
-            monitor.transform.GetChild(i).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = null;
+            monitor.transform.GetChild(counter).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonUp;
+          //  print("property");
             counter++;
         }
+        //counter = 0;
+        foreach (Specie.PositiveProperty property in specie.positiveProperties)
+        {
+            monitor.transform.GetChild(counter).GetComponent<TextMesh>().text = getPropertyName(property);
+            monitor.transform.GetChild(counter).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonUp;
+            counter++;
+        }
+
     }
 
     string getPropertyName(Specie.PositiveProperty property)
@@ -359,12 +367,12 @@ public class SpliceScreen : MonoBehaviour {
 
     public void updateStatsDisplay(Specie firstSpecie, Specie secondSpecie, int numberOfWorkers)
     {
-        statsTextMesh.text = "";
+        spliceStatsTextMesh.text = "";
         if (firstSpecie != null && secondSpecie != null)
         {
             Specie unfinishedSpecie = calcAttributes(firstSpecie, secondSpecie, numberOfWorkers, true);
-            print(unfinishedSpecie.foodPoint);
-            statsTextMesh.text = "Name:             " + unfinishedSpecie.name +
+            //print(unfinishedSpecie.foodPoint);
+            spliceStatsTextMesh.text = "Name:             " + unfinishedSpecie.name +
                                  "\nFood:             " + unfinishedSpecie.foodPoint +
                                  "\nDurability:       " + unfinishedSpecie.durability +
                                  "\nGrow time:        " + unfinishedSpecie.growTime +
@@ -400,8 +408,15 @@ public class SpliceScreen : MonoBehaviour {
 
 	public Specie.NegativeProperty getRandomNegativeProperty(Specie specie1, Specie specie2) {
 		List<Specie.NegativeProperty> negProps = new List<Specie.NegativeProperty> ();
-		negProps.AddRange (specie1.negativeProperties);
-		negProps.AddRange (specie2.negativeProperties);
+        //TODO: checks should not be needed. fix later
+        if (specie1.negativeProperties != null)
+        {
+            negProps.AddRange(specie1.negativeProperties);
+        }
+        if (specie2.negativeProperties != null)
+        {
+            negProps.AddRange(specie2.negativeProperties);
+        }
 		return negProps[(UnityEngine.Random.Range(0,negProps.Count))];
 	}
 

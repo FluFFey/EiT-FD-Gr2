@@ -13,6 +13,7 @@ public class LabHandler : MonoBehaviour
         SPLICING
     }
     LAB_VIEWS currentView = LAB_VIEWS.LOBBY;
+    Coroutine syringeCoroutine = null;
 
     //Splice related variables
     public GameObject topLevelSpliceUI;
@@ -30,10 +31,15 @@ public class LabHandler : MonoBehaviour
     public GameObject rightPropertyScreen;
     public Sprite displayButtonDownSprite;
     public Sprite displayButtonUpSprite;
+    public Sprite propertyButtonUp;
+    public Sprite propertyButtonDown;
+    public GameObject syringeHandle;
+    //TODO: fix/remove when done
+    public Sprite tempMySpliceSprite;
     private Specie firstInsertedSpecie;
     private Specie secondInsertedSpecie;
     //private TextMesh statsText;
-    private TextMesh numberOfWorkersText;
+    public TextMesh numberOfSpliceWorkersText;
     private int selectedSplice;
 
     //Clone related variables
@@ -58,6 +64,7 @@ public class LabHandler : MonoBehaviour
     private Vector3 defaultCamPos;
     public Vector3 spliceCamPos;
     public Vector3 cloneCamPos;
+  
 
     // Use this for initialization
     void Awake()
@@ -69,6 +76,11 @@ public class LabHandler : MonoBehaviour
         {
             GameObject newSpecieButton = Instantiate(draggableObject, spliceUIPanel.transform);
             newSpecieButton.GetComponentInChildren<Text>().text = specie.name;
+            if (specie.image !=null)
+            {
+                print("Here");
+                newSpecieButton.GetComponent<Image>().sprite = specie.image;
+            }
             newSpecieButton.GetComponent<DragableUI>().setSpecie(specie);
         }
 
@@ -86,7 +98,9 @@ public class LabHandler : MonoBehaviour
         firstInsertedSpecie = null;
         secondInsertedSpecie = null;
         specieToClone = null;
-        numberOfWorkersText = GameObject.Find("numberOfAssignedWorkers").GetComponent<TextMesh>();
+
+        //numberOfWorkersText = GameObject.Find("numberOfAssignedWorkers").GetComponent<TextMesh>();
+        print(numberOfSpliceWorkersText.name);
         updateNumberOfWorkersDisplay();
         //statsText = GameObject.Find("randomStatsText").GetComponent<TextMesh>();
         defaultCamPos = Camera.main.transform.position;
@@ -184,7 +198,7 @@ public class LabHandler : MonoBehaviour
     {
         numberOfWorkers = numberOfWorkers > 3 ? 3 : numberOfWorkers;
         numberOfWorkers = numberOfWorkers < 1 ? 1 : numberOfWorkers;
-        numberOfWorkersText.text = ((int)numberOfWorkers / 10).ToString() + " " + ((int)numberOfWorkers % 10).ToString();
+        numberOfSpliceWorkersText.text = ((int)numberOfWorkers / 10).ToString() + " " + ((int)numberOfWorkers % 10).ToString();
     }
 
     void handlePropertySelection()
@@ -194,35 +208,46 @@ public class LabHandler : MonoBehaviour
         {
             if (leftPropertyScreen.transform.GetChild(i).GetComponent<MouseOverObj>().isMouseOver)
             {
+                
                 if (i < firstInsertedSpecie.resistantProperties.Count)
                 {
                     //basically toggling. TODO: Add dynamic function for this and other property type(s)
                     if (chosenDisasterProperties.Contains(firstInsertedSpecie.resistantProperties[i]))
                     {
-                      //  print("leftresistance removed");
+                        //  print("leftresistance removed");
+                        leftPropertyScreen.transform.GetChild(i).GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonDown;
+                        leftPropertyScreen.transform.GetChild(i).GetComponent<TextMesh>().color = Color.black;
+
                         chosenDisasterProperties.Remove(firstInsertedSpecie.resistantProperties[i]);
                     }
                     else
                     {
-                    //    print("leftresistance added");
+                        //    print("leftresistance added");
+                        leftPropertyScreen.transform.GetChild(i).GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonDown;
+                        leftPropertyScreen.transform.GetChild(i).GetComponent<TextMesh>().color = Color.green;
                         chosenDisasterProperties.Add(firstInsertedSpecie.resistantProperties[i]);
                     }
                 }
                 else
                 {
+                    //TODO: not in use, only used on non-resistant properties
                     int normalPropertyNr = i - firstInsertedSpecie.resistantProperties.Count;
                     if (chosenNormalProperties.Contains(firstInsertedSpecie.positiveProperties[normalPropertyNr]))
                     {
-                    //    print("leftnormal removed");
+                        //    print("leftnormal removed");
+                        leftPropertyScreen.transform.GetChild(i).GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonDown;
+                        leftPropertyScreen.transform.GetChild(i).GetComponent<TextMesh>().color = Color.black;
                         chosenNormalProperties.Remove(firstInsertedSpecie.positiveProperties[normalPropertyNr]);
                     }
                     else
                     {
-                    //    print("leftnormal added");
-                        chosenNormalProperties.Add(firstInsertedSpecie.positiveProperties[i]);
+                        //    print("leftnormal added");
+                        leftPropertyScreen.transform.GetChild(i).GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonDown;
+                        leftPropertyScreen.transform.GetChild(i).GetComponent<TextMesh>().color = Color.green;
+                        chosenNormalProperties.Add(firstInsertedSpecie.positiveProperties[normalPropertyNr]);
                     }
-                    //chosenNormalProperties.Add(firstInsertedSpecie.positiveProperties[i - firstInsertedSpecie.resistantProperties.Count]);
                 }
+                updateSyringe();
             }
             //ASSUMING BOTH PROPERTY SCREENS HAVE SAME NUMBER OF CHILDREN(which they should
             if (rightPropertyScreen.transform.GetChild(i).GetComponent<MouseOverObj>().isMouseOver)
@@ -232,32 +257,48 @@ public class LabHandler : MonoBehaviour
                     //basically toggling. TODO: Add dynamic function for this and other property type(s)
                     if (chosenDisasterProperties.Contains(secondInsertedSpecie.resistantProperties[i]))
                     {
-                     //   print("rightresistance removed");
+                        //   print("rightresistance removed");
+                        rightPropertyScreen.transform.GetChild(i).GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonDown;
+                        rightPropertyScreen.transform.GetChild(i).GetComponent<TextMesh>().color = Color.black;
                         chosenDisasterProperties.Remove(secondInsertedSpecie.resistantProperties[i]);
                     }
                     else
                     {
-                      //  print("rightresistance added");
+                        //  print("rightresistance added");
+                        rightPropertyScreen.transform.GetChild(i).GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonDown;
+                        rightPropertyScreen.transform.GetChild(i).GetComponent<TextMesh>().color = Color.green;
+                        
                         chosenDisasterProperties.Add(secondInsertedSpecie.resistantProperties[i]);
                     }
                 }
                 else
                 {
+                    //TODO: not in use. only used when using non-resistant properties
                     int normalPropertyNr = i - secondInsertedSpecie.resistantProperties.Count;
                     if (chosenNormalProperties.Contains(secondInsertedSpecie.positiveProperties[normalPropertyNr]))
                     {
-                      //  print("rightnormal removed");
+                        //  print("rightnormal removed");
+                        rightPropertyScreen.transform.GetChild(i).GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonDown;
+                        rightPropertyScreen.transform.GetChild(i).GetComponent<TextMesh>().color = Color.black;
                         chosenNormalProperties.Remove(secondInsertedSpecie.positiveProperties[normalPropertyNr]);
                     }
                     else
                     {
-                       // print("rightNormal added");
-                        chosenNormalProperties.Add(secondInsertedSpecie.positiveProperties[i]);
+                        // print("rightNormal added");
+                        rightPropertyScreen.transform.GetChild(i).GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonDown;
+                        rightPropertyScreen.transform.GetChild(i).GetComponent<TextMesh>().color = Color.green;
+                        chosenNormalProperties.Add(secondInsertedSpecie.positiveProperties[normalPropertyNr]);
                     }
-                    //chosenNormalProperties.Add(firstInsertedSpecie.positiveProperties[i - firstInsertedSpecie.resistantProperties.Count]);
                 }
+                updateSyringe();
             }
         }
+    }
+
+    private void updateSyringe()
+    {
+        StopAllCoroutines();
+        syringeCoroutine = StartCoroutine(coroutineForSyringe());
     }
 
     /// <summary>
@@ -276,12 +317,14 @@ public class LabHandler : MonoBehaviour
             {
                 numberOfWorkers++;
                 updateNumberOfWorkersDisplay();
+                updateSyringe();
             }
 
             if (removeSpliceWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
             {
                 numberOfWorkers--;
                 updateNumberOfWorkersDisplay();
+                updateSyringe();
             }
 
             if (spliceButton.GetComponent<MouseOverObj>().isMouseOver && 
@@ -291,11 +334,12 @@ public class LabHandler : MonoBehaviour
             {
                 if (GameState.instance.addJob(JobType.SPLICE, numberOfWorkers, 1))
                 {
-                    splicer.spliceSpecies(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers, chosenDisasterProperties,chosenNormalProperties);
+                    Specie newSplice = splicer.spliceSpecies(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers, chosenDisasterProperties,chosenNormalProperties);
+                    GameState.instance.AddMySplices(newSplice);
+                    setSpliceGraphics(selectedSplice,newSplice.image);
                 }
             }
             handlePropertySelection();
-            updateSyringe();
             findSelectedCustomSplice();
         }
 
@@ -307,9 +351,21 @@ public class LabHandler : MonoBehaviour
                 if (spliceMachines[i].GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
                 {
                     chosenDisasterProperties.Clear();
-                    firstInsertedSpecie = draggedObject.GetComponent<DragableUI>().getSpecie();
+                    chosenNormalProperties.Clear();
+                    updateSyringe();
+                    switch (i)
+                    {
+                        case 0:
+                            firstInsertedSpecie = draggedObject.GetComponent<DragableUI>().getSpecie();
+                            break;
+                        case 1:
+                            secondInsertedSpecie = draggedObject.GetComponent<DragableUI>().getSpecie();
+                            break;
+                        default:
+                            break;
+                    }
                     spliceMachines[i].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
-                    splicer.updateStatsDisplay(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers);
+                    //splicer.updateStatsDisplay(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers); //redundant?
                 }
             }
             //TODO: DELETE LATER. (this should not be necessary anymore, but keeping for test)
@@ -332,6 +388,37 @@ public class LabHandler : MonoBehaviour
         }
     }
 
+    IEnumerator coroutineForSyringe()
+    {
+        
+        float fullyOutY = 4.76f;
+        float fullyInY = 1.19f;
+        float syringeUpdateTime = 1.0f;
+        
+        float availablePoints = (numberOfWorkers+1)*splicer.workerValue;//TODO: don't know why +1 is needed
+
+        float usedPoints = chosenDisasterProperties.Count * splicer.disasterPropertyCost +
+                           chosenNormalProperties.Count * splicer.postivePopertyCost;
+        float startPos = syringeHandle.transform.localPosition.y;
+        float fillPercent = Mathf.Max((availablePoints - usedPoints) /12, 0.35f); //should  be 0 and not 0.33. probably same reason as why 1 is needed above
+        float newPos = fillPercent * (fullyOutY - fullyInY);
+
+        for (float f =0; f < syringeUpdateTime; f +=Time.deltaTime)
+        {
+            float percentDone = f / syringeUpdateTime;
+            Vector3 newSyringePos = syringeHandle.transform.localPosition;
+            newSyringePos.y = startPos + (newPos - startPos) * percentDone;
+            syringeHandle.transform.localPosition = newSyringePos;
+            yield return null;
+        }
+        
+    }
+
+    private void setSpliceGraphics(int selectedSplice, Sprite sprite)
+    {
+        mySplicesShelf.transform.GetChild(selectedSplice).GetComponent<SpriteRenderer>().sprite = sprite;
+    }
+
     private void findSelectedCustomSplice()
     {
         //int numberOfCustomSplices;
@@ -344,11 +431,11 @@ public class LabHandler : MonoBehaviour
         }
     }
 
-    private void updateSyringe()
-    {
-        //TODO: Add update to sprøyte here
+   // private void updateSyringe()
+   // {
+        //TODO: Add update to sprøyte here. Ekstra: p
         //throw new NotImplementedException();
-    }
+    //}
 
     public void setDraggedObject(GameObject newDraggedObject)
     {
@@ -371,7 +458,7 @@ public class LabHandler : MonoBehaviour
         {
             StopCoroutine(cameraMovementCoroutine);
         }
-        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(defaultCamPos, 2.0f));
+        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(defaultCamPos));
     }
 
     void switchToClone()
@@ -384,7 +471,7 @@ public class LabHandler : MonoBehaviour
         {
             StopCoroutine(cameraMovementCoroutine);
         }
-        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(cloneCamPos, 2.0f));
+        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(cloneCamPos));
     }
 
     void switchToSplice()
@@ -397,10 +484,10 @@ public class LabHandler : MonoBehaviour
             StopCoroutine(cameraMovementCoroutine);
         }
         
-        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(spliceCamPos, 2.0f));
+        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(spliceCamPos));
     }
 
-    IEnumerator moveCameraTowards(Vector3 target, float duration = 1.0f)
+    IEnumerator moveCameraTowards(Vector3 target, float duration = 0.5f)
     {
         Vector3 startPos = Camera.main.transform.position;
         Vector3 moveVector = target - startPos;

@@ -12,13 +12,13 @@ public class Specie {
 	public List<DisasterProperty> resistantProperties { get; set;}
 	public List<PositiveProperty> positiveProperties;
 	public List<NegativeProperty> negativeProperties;
-	public Sprite image { get; set;}
+    public Sprite image;
 	public Rarity rarity { get; set;}
     public Type type { get; set; }
 	public bool edible { get; set;}
 
 
-	public Specie (string name, int foodPoint, int durability, int growTime, List<DisasterProperty> properties, List<PositiveProperty> positiveProps, List<NegativeProperty> negativeProps, Sprite image, int seedsPerWorker,int tag, Rarity rarity, Type type)
+	public Specie (string name, int foodPoint, int durability, int growTime, List<DisasterProperty> properties, List<PositiveProperty> positiveProps, List<NegativeProperty> negativeProps, Sprite image, int seedsPerWorker, Rarity rarity, Type type)
 	{
 		this.name = name;
 		this.foodPoint = foodPoint;
@@ -55,7 +55,7 @@ public class Specie {
 
     //Type determining where the specie can be found.
     public enum Type {
-        FOREST, WATER
+        FOREST, WATER, DEFAULT
     }
 
 	// PROPERTIES. NOTE: THESE PROPERTIES IS ONLY APPLIED WHEN SPLICING AND WILL 

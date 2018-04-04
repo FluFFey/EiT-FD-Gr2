@@ -1,11 +1,16 @@
 fileFormatVersion: 2
 guid: 764656ff66a544d338a0e0a522eb4e3c
-timeCreated: 1519822961
+timeCreated: 1522845904
 licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - cornSprite: {fileID: 21300004, guid: f7a2b960c8ef87541abe6a896c38bf58, type: 3}
+  - pufferfishSprite: {fileID: 21300006, guid: f7a2b960c8ef87541abe6a896c38bf58, type: 3}
+  - beeSprite: {fileID: 21300014, guid: f7a2b960c8ef87541abe6a896c38bf58, type: 3}
+  - mooseSprite: {fileID: 21300012, guid: f7a2b960c8ef87541abe6a896c38bf58, type: 3}
+  - moleSprite: {fileID: 21300016, guid: f7a2b960c8ef87541abe6a896c38bf58, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
