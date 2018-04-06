@@ -25,8 +25,11 @@ public class SpliceScreen : MonoBehaviour {
     public Sprite propertyButtonDown;
 
     public TextMesh spliceStatsTextMesh;
+    public TextMesh cloneStatsTextMesh;
     public GameObject leftPropertyDisplay;
     public GameObject rightPropertyDisplay;
+
+    public GameObject clonePropertyDisplay;
     // Use this for initialization
     void Start () {
         //spliceStatsTextMesh = GameObject.Find("spliceStatsText").GetComponent<TextMesh>();
@@ -78,10 +81,11 @@ public class SpliceScreen : MonoBehaviour {
 	public Specie spliceSpecies(Specie baseSpecie1, Specie baseSpecie2, int numWorkers, List<DisasterProperty> chosenDisProps, List<Specie.PositiveProperty> chosenPosPros) {
 		//new splice with calculated attributes. 
 		Specie splicedSpecie = calcAttributes(baseSpecie1, baseSpecie2, numWorkers);
-		splicedSpecie.name = baseSpecie1.name + baseSpecie2.name;
-
-		//CREATE NEW SPECIES BASED ON ATTRIBUTES AND  SET PROPERTIES. 
-		splicedSpecie.resistantProperties = chosenDisProps;
+        //splicedSpecie.name = GameState.instance.getSpecieName(baseSpecie1.name, baseSpecie2.name); //is needed when calculating for displaying on screen so redundant here?
+        //splicedSpecie.name = baseSpecie1.name + baseSpecie2.name;
+        splicedSpecie.image = GameState.instance.getSpecieSprite(baseSpecie1.name, baseSpecie2.name);
+        //CREATE NEW SPECIES BASED ON ATTRIBUTES AND  SET PROPERTIES. 
+        splicedSpecie.resistantProperties = chosenDisProps;
 
 		// integer which evaluates how much of the needle you have used based on selected properties. 
 		int propertyCost = 0;
@@ -281,6 +285,10 @@ public class SpliceScreen : MonoBehaviour {
             case 2:
                 monitor = rightPropertyDisplay;
                 break;
+            case 3:
+                //TODO: some structural oversights here. Could (should?) copy/paste code, but feel this is still better
+                monitor = clonePropertyDisplay;
+                break;
             default:
                 print("wrong input to setPropertyMonitorBasedOnSpecie(...)");
                 break;
@@ -288,9 +296,11 @@ public class SpliceScreen : MonoBehaviour {
         int numberOfPossibleProperties = 5;
         for (int i = 0; i < numberOfPossibleProperties; i++)
         {
-           // print(i);
             monitor.transform.GetChild(i).GetComponent<TextMesh>().text = "";
-            monitor.transform.GetChild(i).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = null;
+            if (monitorNr !=3)
+            {
+                monitor.transform.GetChild(i).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = null;
+            }
         }
 
         int counter = 0;
@@ -298,7 +308,10 @@ public class SpliceScreen : MonoBehaviour {
         foreach (DisasterProperty property in specie.resistantProperties)
         {
             monitor.transform.GetChild(counter).GetComponent<TextMesh>().text = getPropertyName(property);
-            monitor.transform.GetChild(counter).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonUp;
+            if (monitorNr != 3)
+            {
+                monitor.transform.GetChild(counter).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonUp;
+            }
           //  print("property");
             counter++;
         }
@@ -306,9 +319,21 @@ public class SpliceScreen : MonoBehaviour {
         foreach (Specie.PositiveProperty property in specie.positiveProperties)
         {
             monitor.transform.GetChild(counter).GetComponent<TextMesh>().text = getPropertyName(property);
-            monitor.transform.GetChild(counter).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonUp;
+            if (monitorNr != 3)
+            {
+                monitor.transform.GetChild(counter).transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = propertyButtonUp;
+            }
             counter++;
         }
+        if (monitorNr == 3 && counter <5)
+        {
+            foreach (Specie.NegativeProperty property in specie.negativeProperties)
+            {
+                monitor.transform.GetChild(counter).GetComponent<TextMesh>().text = getPropertyName(property);
+            }
+            counter++;
+        }
+         
 
     }
 
@@ -365,20 +390,30 @@ public class SpliceScreen : MonoBehaviour {
         }
     }
 
-    public void updateStatsDisplay(Specie firstSpecie, Specie secondSpecie, int numberOfWorkers)
+    public void updateStatsDisplay(Specie firstSpecie, Specie secondSpecie, int numberOfWorkers, bool cloneDisplay = false)
     {
-        spliceStatsTextMesh.text = "";
-        if (firstSpecie != null && secondSpecie != null)
+        TextMesh textMeshToUpdate = cloneDisplay ? cloneStatsTextMesh : spliceStatsTextMesh;
+        textMeshToUpdate.text = "";
+        if (firstSpecie != null && ( secondSpecie != null || cloneDisplay))
         {
-            Specie unfinishedSpecie = calcAttributes(firstSpecie, secondSpecie, numberOfWorkers, true);
+            Specie unfinishedSpecie = cloneDisplay ? 
+                firstSpecie : 
+                calcAttributes(firstSpecie, secondSpecie, numberOfWorkers, true);
             //print(unfinishedSpecie.foodPoint);
-            spliceStatsTextMesh.text = "Name:             " + unfinishedSpecie.name +
+            textMeshToUpdate.text = "Name:             " + unfinishedSpecie.name +
                                  "\nFood:             " + unfinishedSpecie.foodPoint +
                                  "\nDurability:       " + unfinishedSpecie.durability +
                                  "\nGrow time:        " + unfinishedSpecie.growTime +
                                  "\nSeeds Per Worker: " + unfinishedSpecie.seedsPerWorker;
-            setPropertyMonitorBasedOnSpecie(firstSpecie, 1);
-            setPropertyMonitorBasedOnSpecie(secondSpecie, 2);
+            if (!cloneDisplay)
+            {
+                setPropertyMonitorBasedOnSpecie(firstSpecie, 1);
+                setPropertyMonitorBasedOnSpecie(secondSpecie, 2);
+            }
+            else
+            {
+                setPropertyMonitorBasedOnSpecie(unfinishedSpecie, 3);
+            }
         }
         //uncomment if we want properties to  be displayed without selecting two species
         //if (firstSpecie != null)

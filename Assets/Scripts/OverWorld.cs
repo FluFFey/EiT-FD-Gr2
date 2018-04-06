@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Overworld : MonoBehaviour
 {
-    private const int numberOfInteractables = 6;
+    private const int numberOfInteractables = 5;
     public GameObject[] highlightableChildren;
     GameObject[] UIPopUps;
 

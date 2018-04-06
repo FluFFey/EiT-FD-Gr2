@@ -1,12 +1,11 @@
 fileFormatVersion: 2
-guid: 9f8c506a727a32b48bc8654e3b05e6bb
-timeCreated: 1522961888
+guid: ee99dc9186c59334a81b5a3070a6abb4
+timeCreated: 1522954282
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: farm_finished_0
-    21300002: farm_finished_1
-    21300004: farm_finished_2
+    21300000: cloneBagSpriteMask_0
+    21300002: cloneBagSpriteMask_1
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -35,7 +34,7 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
     wrapU: 1
     wrapV: 1
@@ -113,13 +112,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: farm_finished_0
+      name: cloneBagSpriteMask_0
       rect:
         serializedVersion: 2
-        x: 102
-        y: 889
-        width: 1302
-        height: 1313
+        x: 16
+        y: 497
+        width: 215
+        height: 196
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -127,27 +126,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: farm_finished_1
+      name: cloneBagSpriteMask_1
       rect:
         serializedVersion: 2
-        x: 154
-        y: 163
-        width: 368
-        height: 326
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: farm_finished_2
-      rect:
-        serializedVersion: 2
-        x: 618
-        y: 188
-        width: 874
-        height: 619
+        x: 0
+        y: 0
+        width: 582
+        height: 475
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

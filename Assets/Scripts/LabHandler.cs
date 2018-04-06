@@ -34,23 +34,19 @@ public class LabHandler : MonoBehaviour
     public Sprite propertyButtonUp;
     public Sprite propertyButtonDown;
     public GameObject syringeHandle;
-    //TODO: fix/remove when done
-    public Sprite tempMySpliceSprite;
     private Specie firstInsertedSpecie;
     private Specie secondInsertedSpecie;
-    //private TextMesh statsText;
     public TextMesh numberOfSpliceWorkersText;
     private int selectedSplice;
 
     //Clone related variables
-    public GameObject topLevelCloneUI;
     public GameObject cloneGO;
-    public GameObject cloneUIPanel;
-    public GameObject cloneMachine;
     public GameObject addCloneWorkerButton;
     public GameObject removeCloneWorkerButton;
     public GameObject cloneButton;
     public GameObject leaveCloning;
+    public GameObject cloneSplicesShelf;
+    public TextMesh numberOfCloneWorkersText;
     private Specie specieToClone;
 
     //Other
@@ -75,34 +71,31 @@ public class LabHandler : MonoBehaviour
         foreach (Specie specie in GameState.instance.knownSpecies)
         {
             GameObject newSpecieButton = Instantiate(draggableObject, spliceUIPanel.transform);
-            newSpecieButton.GetComponentInChildren<Text>().text = specie.name;
+            
+
             if (specie.image !=null)
             {
-                print("Here");
                 newSpecieButton.GetComponent<Image>().sprite = specie.image;
             }
             newSpecieButton.GetComponent<DragableUI>().setSpecie(specie);
         }
 
-        //foreach (Specie specie in GameState.instance.mySplices)
-        //{
-        //    GameObject newSpliceButton = Instantiate(draggableObject, spliceUIPanel.transform);
-        //    newSpliceButton.GetComponentInChildren<Text>().text = specie.name;
-        //    print(specie.name);
-        //    newSpliceButton.GetComponent<DragableUI>().setSpecie(specie);
-        //}
+        for (int i = 0; i < GameState.instance.mySplices.Count; i++)
+        {
+            if (GameState.instance.mySplices[i] != null)
+            {
+                mySplicesShelf.transform.GetChild(i).GetChild(1).GetComponent<SpriteRenderer>().sprite = GameState.instance.mySplices[i].image;
+                cloneSplicesShelf.transform.GetChild(i).GetChild(1).GetComponent<SpriteRenderer>().sprite = GameState.instance.mySplices[i].image;
+            }
+        }
 
         topLevelSpliceUI.SetActive(false);
-        topLevelCloneUI.SetActive(false);
 
         firstInsertedSpecie = null;
         secondInsertedSpecie = null;
         specieToClone = null;
 
-        //numberOfWorkersText = GameObject.Find("numberOfAssignedWorkers").GetComponent<TextMesh>();
         print(numberOfSpliceWorkersText.name);
-        updateNumberOfWorkersDisplay();
-        //statsText = GameObject.Find("randomStatsText").GetComponent<TextMesh>();
         defaultCamPos = Camera.main.transform.position;
         selectedSplice = -1;
     }
@@ -126,11 +119,13 @@ public class LabHandler : MonoBehaviour
                 break;
         }
     }
+
     /// <summary>
     /// Lobby input
     /// </summary>
     private void handleLabLobbyInput()
     {
+        
         if (Input.GetMouseButtonDown(0))
         {
             if (leaveLabDoor.GetComponent<MouseOverObj>().isMouseOver)
@@ -152,6 +147,7 @@ public class LabHandler : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// handle clone input
     /// </summary>
@@ -162,48 +158,90 @@ public class LabHandler : MonoBehaviour
             //TODO: add visualization of  mouse over
             if (leaveCloning.GetComponent<MouseOverObj>().isMouseOver)
             {
+                if (selectedSplice != -1)
+                {
+                    cloneSplicesShelf.transform.GetChild(selectedSplice).GetComponent<MouseOverObj>().lockedOutline = false;
+                    cloneSplicesShelf.transform.GetChild(selectedSplice).GetComponent<MouseOverObj>().removeOutline();
+                    selectedSplice = -1;
+                }
+                cloner.resetSeedDisplay();
                 switchToMainLab();
             }
 
             if (addCloneWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
             {
                 numberOfWorkers++;
-                updateNumberOfWorkersDisplay();
+                updateNumberOfWorkersDisplay(true);
+                if (selectedSplice != -1)
+                {
+                    cloner.updateNumSeeds(GameState.instance.mySplices[selectedSplice], numberOfWorkers);
+                }
             }
 
             if (removeCloneWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
             {
                 numberOfWorkers--;
-                updateNumberOfWorkersDisplay();
-            }
-
-            if (cloneMachine.GetComponent<MouseOverObj>().isMouseOver && draggedObject != null)
-            {
-                specieToClone = draggedObject.GetComponent<DragableUI>().getSpecie();
-            }
-
-            if (cloneButton.GetComponent<MouseOverObj>().isMouseOver && specieToClone != null)
-            {
-                if (GameState.instance.addJob(JobType.CLONE, numberOfWorkers, 0))
+                updateNumberOfWorkersDisplay(true);
+                if (selectedSplice !=-1)
                 {
-                    cloner.Clone(specieToClone, numberOfWorkers);
+                    cloner.updateNumSeeds(GameState.instance.mySplices[selectedSplice], numberOfWorkers);
                 }
-                numberOfWorkers = 0;
+            }
+
+            if (cloneButton.GetComponent<MouseOverObj>().isMouseOver)
+            {
+                if (specieToClone != null)
+                {
+                    if (!cloner.isSeedOnFloor())
+                    {
+                        if (GameState.instance.addJob(JobType.CLONE, numberOfWorkers, 0))
+                        {
+                            specieToClone = GameState.instance.mySplices[selectedSplice];
+                            cloner.Clone(specieToClone, numberOfWorkers);
+                        }
+                        numberOfWorkers = 1;
+                    }
+                    else
+                    {
+                        StartCoroutine(blinkingOutline(cloner.getPacketGO()));
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        StartCoroutine(blinkingOutline(cloneSplicesShelf.transform.GetChild(i).gameObject));
+                    }
+                }
+                
+            }
+            if (findSelectedCustomSplice(true))
+            {
+                if (GameState.instance.mySplices[selectedSplice] != null)
+                {
+                    specieToClone = GameState.instance.mySplices[selectedSplice];
+                    splicer.updateStatsDisplay(specieToClone, null, numberOfWorkers, true);
+                    cloner.updateNumSeeds(GameState.instance.mySplices[selectedSplice], numberOfWorkers);
+                }
+                else
+                {
+                    specieToClone = null;
+                }
             }
 
         }
     }
 
-    void updateNumberOfWorkersDisplay()
+    void updateNumberOfWorkersDisplay(bool cloneWorkers = false)
     {
+        TextMesh textToUpdate = cloneWorkers ? numberOfCloneWorkersText : numberOfSpliceWorkersText;
         numberOfWorkers = numberOfWorkers > 3 ? 3 : numberOfWorkers;
         numberOfWorkers = numberOfWorkers < 1 ? 1 : numberOfWorkers;
-        numberOfSpliceWorkersText.text = ((int)numberOfWorkers / 10).ToString() + " " + ((int)numberOfWorkers % 10).ToString();
+        textToUpdate.text = ((int)numberOfWorkers / 10).ToString() + " " + ((int)numberOfWorkers % 10).ToString();
     }
 
     void handlePropertySelection()
     {
-        //TODO: add graphics for showing a button is pushed down
         for (int i = 0; i < leftPropertyScreen.transform.childCount; i++)
         {
             if (leftPropertyScreen.transform.GetChild(i).GetComponent<MouseOverObj>().isMouseOver)
@@ -297,7 +335,10 @@ public class LabHandler : MonoBehaviour
 
     private void updateSyringe()
     {
-        StopAllCoroutines();
+        if (syringeCoroutine !=null)
+        {
+            StopCoroutine(syringeCoroutine); //TODO: test if this actually does what it is supposed to. probably does if you read this in a few weeks
+        }
         syringeCoroutine = StartCoroutine(coroutineForSyringe());
     }
 
@@ -310,6 +351,12 @@ public class LabHandler : MonoBehaviour
         {
             if (leaveSplicing.GetComponent<MouseOverObj>().isMouseOver)
             {
+                if (selectedSplice != -1)
+                {
+                    mySplicesShelf.transform.GetChild(selectedSplice).GetComponent<MouseOverObj>().lockedOutline = false;
+                    mySplicesShelf.transform.GetChild(selectedSplice).GetComponent<MouseOverObj>().removeOutline();
+                    selectedSplice = -1;
+                }
                 switchToMainLab();
             }
 
@@ -327,18 +374,44 @@ public class LabHandler : MonoBehaviour
                 updateSyringe();
             }
 
-            if (spliceButton.GetComponent<MouseOverObj>().isMouseOver && 
-                firstInsertedSpecie != null && 
-                secondInsertedSpecie != null && 
-                selectedSplice != -1) //is -1 when nothing is scene is initiated
+            if (spliceButton.GetComponent<MouseOverObj>().isMouseOver)
             {
-                if (GameState.instance.addJob(JobType.SPLICE, numberOfWorkers, 1))
+                if (firstInsertedSpecie != null)
                 {
-                    Specie newSplice = splicer.spliceSpecies(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers, chosenDisasterProperties,chosenNormalProperties);
-                    GameState.instance.AddMySplices(newSplice);
-                    setSpliceGraphics(selectedSplice,newSplice.image);
+                    if (secondInsertedSpecie != null)
+                    {
+                        if (selectedSplice != -1)
+                        {
+                            if (GameState.instance.addJob(JobType.SPLICE, numberOfWorkers, 1))
+                            {
+                                Specie newSplice = splicer.spliceSpecies(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers, chosenDisasterProperties, chosenNormalProperties);
+                                GameState.instance.mySplices[selectedSplice] = newSplice;
+                                setSpliceGraphics(selectedSplice, newSplice.image);
+                            }
+                            else
+                            {
+                                //TODO: add blinking på worker logo i hud ?
+                            }
+                        }
+                        else
+                        {
+                            for(int i =0; i < 5; i++)
+                            {
+                                StartCoroutine(blinkingOutline(mySplicesShelf.transform.GetChild(i).gameObject));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        StartCoroutine(blinkingOutline(spliceMachines[1]));
+                    }
+                }
+                else
+                {
+                    StartCoroutine(blinkingOutline(spliceMachines[0]));
                 }
             }
+
             handlePropertySelection();
             findSelectedCustomSplice();
         }
@@ -388,6 +461,30 @@ public class LabHandler : MonoBehaviour
         }
     }
 
+    IEnumerator blinkingOutline(GameObject objectToBlink, float blinkDuration =1.25f)
+    {
+        MouseOverObj blinkScript = objectToBlink.GetComponent<MouseOverObj>();
+        blinkScript.lockedOutline = true;
+        float blinksPerSecond = 6;
+        for (float f =0; f < blinkDuration;f+=Time.deltaTime)
+        {
+            if (((int)(f* blinksPerSecond)) % 2==0)
+            {
+                blinkScript.addOutline();
+            }
+            else
+            {
+                blinkScript.removeOutline();
+            }
+            yield return null;
+        }
+        if (!blinkScript.isMouseOver)
+        {
+            blinkScript.removeOutline();
+        }
+        blinkScript.lockedOutline = false;
+    }
+
     IEnumerator coroutineForSyringe()
     {
         
@@ -416,27 +513,32 @@ public class LabHandler : MonoBehaviour
 
     private void setSpliceGraphics(int selectedSplice, Sprite sprite)
     {
-        mySplicesShelf.transform.GetChild(selectedSplice).GetComponent<SpriteRenderer>().sprite = sprite;
+        mySplicesShelf.transform.GetChild(selectedSplice).GetChild(1).GetComponent<SpriteRenderer>().sprite = sprite;
+        cloneSplicesShelf.transform.GetChild(selectedSplice).GetChild(1).GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
-    private void findSelectedCustomSplice()
+    //returns true if a splice is moused overed
+    private bool findSelectedCustomSplice(bool forCloning = false)
     {
-        //int numberOfCustomSplices;
-        for (int i = 0; i < mySplicesShelf.transform.childCount; i++)
+        GameObject shelfObject = forCloning ? cloneSplicesShelf : mySplicesShelf;
+        int oldSelection = selectedSplice;
+        for (int i = 0; i < shelfObject.transform.childCount; i++)
         {
-            if (mySplicesShelf.transform.GetChild(i).GetComponent<MouseOverObj>().isMouseOver)
+            if (shelfObject.transform.GetChild(i).GetComponent<MouseOverObj>().isMouseOver)
             {
                 selectedSplice = i;
+                shelfObject.transform.GetChild(i).GetComponent<MouseOverObj>().lockedOutline = true;
+                if (oldSelection != -1)
+                {
+                    shelfObject.transform.GetChild(oldSelection).GetComponent<MouseOverObj>().lockedOutline = false;
+                    shelfObject.transform.GetChild(oldSelection).GetComponent<MouseOverObj>().removeOutline();
+                }
+                return true;
             }
         }
+        return false;
     }
-
-   // private void updateSyringe()
-   // {
-        //TODO: Add update to sprøyte here. Ekstra: p
-        //throw new NotImplementedException();
-    //}
-
+    
     public void setDraggedObject(GameObject newDraggedObject)
     {
         draggedObject = newDraggedObject;
@@ -450,7 +552,6 @@ public class LabHandler : MonoBehaviour
     void switchToMainLab()
     {
         currentView = LAB_VIEWS.LOBBY;
-        topLevelCloneUI.SetActive(false);
         topLevelSpliceUI.SetActive(false);
         cloneGO.GetComponent<BoxCollider2D>().enabled = true;
         spliceGO.GetComponent<BoxCollider2D>().enabled = true;
@@ -465,7 +566,6 @@ public class LabHandler : MonoBehaviour
     {
         cloneGO.GetComponent<BoxCollider2D>().enabled = false;
         currentView = LAB_VIEWS.CLONING;
-        topLevelCloneUI.SetActive(true);
 
         if (cameraMovementCoroutine != null)
         {

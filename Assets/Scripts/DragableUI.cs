@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+//TODO: should probably not be outcommented, but here we are
 [RequireComponent(typeof(Image))]
 public class DragableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -9,13 +11,19 @@ public class DragableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     private GameObject m_DraggingIcon;
     private LabHandler labHandlerScript;
+    
     private RectTransform m_DraggingPlane;
-    Specie specie;
+    private Specie specie;
     
 
     void Awake()
     {
-        labHandlerScript = GameObject.Find("LabHandler").GetComponent<LabHandler>();
+        if (GameObject.Find("LabHandler"))
+        {
+            labHandlerScript = GameObject.Find("LabHandler").GetComponent<LabHandler>();
+        }
+
+        
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -30,10 +38,14 @@ public class DragableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         m_DraggingIcon.transform.SetParent(canvas.transform, false);
         m_DraggingIcon.transform.SetAsLastSibling();
-
+        m_DraggingIcon.transform.localScale *= 0.5f;
         Image image = m_DraggingIcon.AddComponent<Image>();
 
-        image.sprite = GetComponent<Image>().sprite;
+        if (GetComponent<Image>() !=null)
+        {
+            image.sprite = GetComponent<Image>().sprite;
+        }
+
         image.SetNativeSize();
 
         if (dragOnSurfaces)
@@ -51,7 +63,10 @@ public class DragableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         if (m_DraggingIcon != null)
             SetDraggedPosition(data);
-        labHandlerScript.setDraggedObject(gameObject);
+        if(labHandlerScript !=null)
+        {
+            labHandlerScript.setDraggedObject(gameObject);
+        }
     }
 
     private void SetDraggedPosition(PointerEventData data)
@@ -100,4 +115,6 @@ public class DragableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         return specie;
     }
+
+
 }

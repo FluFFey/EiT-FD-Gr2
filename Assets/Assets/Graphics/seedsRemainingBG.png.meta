@@ -1,12 +1,9 @@
 fileFormatVersion: 2
-guid: 9f8c506a727a32b48bc8654e3b05e6bb
-timeCreated: 1522961888
+guid: 8eae3a84781bde945b1ab3dd195d8e45
+timeCreated: 1522986862
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: farm_finished_0
-    21300002: farm_finished_1
-    21300004: farm_finished_2
+  fileIDToRecycleName: {}
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -43,7 +40,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -111,49 +108,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: farm_finished_0
-      rect:
-        serializedVersion: 2
-        x: 102
-        y: 889
-        width: 1302
-        height: 1313
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: farm_finished_1
-      rect:
-        serializedVersion: 2
-        x: 154
-        y: 163
-        width: 368
-        height: 326
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: farm_finished_2
-      rect:
-        serializedVersion: 2
-        x: 618
-        y: 188
-        width: 874
-        height: 619
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
+    sprites: []
     outline: []
     physicsShape: []
   spritePackingTag: 

@@ -21,7 +21,7 @@ public class GameState : MonoBehaviour {
 	//HUD-ATTRIBUTES
 	int survivors; 
 	List<Job> currentJobs;
-    Dictionary<Seed, int> seeds;
+    Dictionary<Seed, int> inventorySeeds;
     public List<Specie> knownSpecies;
     List<Specie> unknownSpecies;
     public List<Specie> allSpecies;
@@ -77,7 +77,7 @@ public class GameState : MonoBehaviour {
 		// init HUD-State
 		this.survivors = 10;
 		this.currentJobs = new List<Job> ();
-		this.seeds = new Dictionary<Seed, int>();
+		this.inventorySeeds = new Dictionary<Seed, int>();
 
 
 
@@ -102,7 +102,10 @@ public class GameState : MonoBehaviour {
         List<DisasterProperty> beeResistances = new List<DisasterProperty>();
         beeResistances.Add(DisasterProperty.EARTHQUAKE);
         List<Specie.PositiveProperty> beeProperties = new List<Specie.PositiveProperty>();
+        beeProperties.Add(Specie.PositiveProperty.EXTRA_SEED_PER_WORKER);
         List<Specie.NegativeProperty> beeNegatives = new List<Specie.NegativeProperty>();
+        beeNegatives.Add(Specie.NegativeProperty.LESS_FOOD_POINT);
+        beeNegatives.Add(Specie.NegativeProperty.LESS_DURABILITY);
 
         Specie beeSpecie = new Specie(
             "bee",
@@ -113,65 +116,73 @@ public class GameState : MonoBehaviour {
             beeProperties,
             beeNegatives,
             beeSprite,
-            1, //seeds per worker
+            5, //seeds per worker
             Specie.Rarity.COMMON,
             Specie.Type.DEFAULT);
 
         List<DisasterProperty> moleResistances = new List<DisasterProperty>();
+        moleResistances.Add(DisasterProperty.WIND);
         List<Specie.PositiveProperty> moleProperties = new List<Specie.PositiveProperty>();
+        moleProperties.Add(Specie.PositiveProperty.EXTRA_DURABILITY);
         List<Specie.NegativeProperty> moleNegatives = new List<Specie.NegativeProperty>();
-
+        moleNegatives.Add(Specie.NegativeProperty.REMOVES_RANDOM_RESISTANCE);
+        moleNegatives.Add(Specie.NegativeProperty.EXTRA_GROWTIME);
         Specie moleSpecie = new Specie(
             "mole",
-            1, //foodpoint
-            1, //durability
-            1, //growtime
+            3, //foodpoint
+            5, //durability
+            2, //growtime
             moleResistances,
             moleProperties,
             moleNegatives,
             moleSprite,
-            1, //seeds per worker
+            3, //seeds per worker
             Specie.Rarity.COMMON,
             Specie.Type.DEFAULT);
 
         List<DisasterProperty> cornResistances = new List<DisasterProperty>();
         List<Specie.PositiveProperty> cornProperties = new List<Specie.PositiveProperty>();
+        cornProperties.Add(Specie.PositiveProperty.LESS_GROWTIME);
         List<Specie.NegativeProperty> cornNegatives = new List<Specie.NegativeProperty>();
+        cornNegatives.Add(Specie.NegativeProperty.REMOVES_RANDOM_RESISTANCE);
 
         Specie cornSpecie = new Specie(
             "corn",
-            1, //foodpoint
-            1, //durability
-            1, //growtime
+            2, //foodpoint
+            2, //durability
+            2, //growtime
             cornResistances,
             cornProperties,
             cornNegatives,
             cornSprite,
-            1, //seeds per worker
+            3, //seeds per worker
             Specie.Rarity.COMMON,
             Specie.Type.DEFAULT);
 
         List<DisasterProperty> mooseResistances = new List<DisasterProperty>();
         List<Specie.PositiveProperty> mooseProperties = new List<Specie.PositiveProperty>();
+        mooseProperties.Add(Specie.PositiveProperty.EXTRA_FOOD_POINT);
         List<Specie.NegativeProperty> mooseNegatives = new List<Specie.NegativeProperty>();
+        mooseNegatives.Add(Specie.NegativeProperty.EXTRA_GROWTIME);
 
         Specie mooseSpecie = new Specie(
             "moose",
-            1, //foodpoint
-            1, //durability
-            1, //growtime
+            10, //foodpoint
+            2, //durability
+            5, //growtime
             mooseResistances,
             mooseProperties,
             mooseNegatives,
             mooseSprite,
-            1, //seeds per worker
+            2, //seeds per worker
             Specie.Rarity.COMMON,
             Specie.Type.DEFAULT);
 
         List<DisasterProperty> pufferfishResistances = new List<DisasterProperty>();
+        pufferfishResistances.Add(DisasterProperty.WATER);
         List<Specie.PositiveProperty> pufferfishProperties = new List<Specie.PositiveProperty>();
         List<Specie.NegativeProperty> pufferfishNegatives = new List<Specie.NegativeProperty>();
-
+        pufferfishNegatives.Add(Specie.NegativeProperty.LESS_SEED_PER_WORKER);
         Specie pufferfishSpecie = new Specie(
             "pufferfish",
             1, //foodpoint
@@ -207,10 +218,22 @@ public class GameState : MonoBehaviour {
 
     }
 
+    private void initInitialFarmState()
+    {
+        Seed newSeed = new Seed(baseSpecies[2].name, baseSpecies[2]);
+        newSeed.daysGrown = 2;
+        plantedSeeds.Add(20, newSeed);
+        plantedSeeds.Add(21, newSeed);
+        plantedSeeds.Add(22, newSeed);
+        plantedSeeds.Add(23, newSeed);
+        plantedSeeds.Add(24, newSeed);
+    }
+
     void Start()
     {
         // init Species-State
         initSpeciesState();
+        initInitialFarmState();
         //List <DisasterProperty> pufferResistances = new List<DisasterProperty>();
         //pufferResistances.Add(DisasterProperty.WATER);
         //List<DisasterProperty> mooseResistances = new List<DisasterProperty>();
@@ -302,19 +325,24 @@ public class GameState : MonoBehaviour {
         return survivors - this.currentJobs.Sum(j => j.numWorkers);
     }
     
-    public Dictionary<Seed, int> getSeeds()
+    public Dictionary<Seed, int> getInventorySeeds()
     {
-        return seeds;
+        return inventorySeeds;
     }
 
     public void setSeeds(Seed seed, int numSeeds)
     {
-        if (seeds.ContainsKey(seed)){
-            seeds[seed] += numSeeds;
+        if (inventorySeeds.ContainsKey(seed)){
+            inventorySeeds[seed] += numSeeds;
         }
         else{
-            seeds.Add(seed, numSeeds);
+            inventorySeeds.Add(seed, numSeeds);
         }
+    }
+
+    public Dictionary<int, Seed> getPlantedSeeds()
+    {
+        return plantedSeeds;
     }
 
     public int getFoodPointsConsumed(){
@@ -417,13 +445,18 @@ public class GameState : MonoBehaviour {
 	public void plantSeed(Seed seed, int index) {
 		if (emptyFarmSlot (index)) {
 			this.plantedSeeds.Add (index, seed);
+            inventorySeeds[seed]--;
+            if (inventorySeeds[seed]==0)
+            {
+                inventorySeeds.Remove(seed);
+            }
 		}
 	}
 
 	public bool emptyFarmSlot(int index) {
 		//int x = this.IMAGE_WIDTH % index;
 		//int y = this.IMAGE_WIDTH / index;
-		return this.plantedSeeds.ContainsKey (index);
+		return !this.plantedSeeds.ContainsKey (index);
 	
 	}
 
@@ -436,14 +469,16 @@ public class GameState : MonoBehaviour {
 	}
 
 	// TODO CONSIDER NON-VOID
-	public void eatFood(int index) {
-			if(checkRipeSeed(index)){
-				Seed seed = this.plantedSeeds[index];
-				this.plantedSeeds.Remove(index);
-				Specie food = seed.specie;
-				this.foodPointsConsumed += food.foodPoint;
-			}
-	}
+	public bool eatFood(int index) {
+		if(checkRipeSeed(index)){
+			Seed seed = this.plantedSeeds[index];
+			this.plantedSeeds.Remove(index);
+			Specie food = seed.specie;
+			this.foodPointsConsumed += food.foodPoint;
+            return true;
+		}
+        return false;
+    }
 
 	public bool checkRipeSeed(int index) {
 		if (!emptyFarmSlot (index)) {
@@ -595,7 +630,7 @@ public class GameState : MonoBehaviour {
         return returnString;
     }
 
-    Sprite getSpecieImage(string baseSpecie1, string baseSpecie2)
+    public Sprite getSpecieSprite(string baseSpecie1, string baseSpecie2)
     {
         int switchValue = 0;
         Sprite returnSprite = null;

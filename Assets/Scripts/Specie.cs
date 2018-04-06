@@ -45,8 +45,11 @@ public class Specie {
 
 
 	public void removeRandomResitance() {
-		// TODO: CHECK -1?
-		this.resistantProperties.RemoveAt(UnityEngine.Random.Range(0,resistantProperties.Count));
+        //this negative property does nothing when no resistance is found
+        if (resistantProperties.Count >0)
+        {
+            this.resistantProperties.RemoveAt(UnityEngine.Random.Range(0, resistantProperties.Count));
+        }
 	}
 
     public enum Rarity {
