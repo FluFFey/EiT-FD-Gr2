@@ -83,6 +83,7 @@ public class Overworld : MonoBehaviour
             switch (highlightedButton)
             {
                 case HIGHLIGHTABLE_OBJECTS.LABORATORY:
+                    SoundManager.instance.playSound(SoundManager.SOUNDS.ENTER_LAB);
                     SceneHandler.instance.changeScene(SceneHandler.SCENES.LAB);
                     break;
                 case HIGHLIGHTABLE_OBJECTS.FOREST:

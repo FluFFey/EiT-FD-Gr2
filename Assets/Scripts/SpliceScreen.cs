@@ -159,9 +159,24 @@ public class SpliceScreen : MonoBehaviour {
 					break;
 			}
 		});
-		//TODO: IMPLEMENT RARITY? INCREMENT BY ONE OF HIGHEST?
-		//TODO: ADD IMAGE? Another lookuptable?
-		return splicedSpecie;
+
+        //hack solution
+        splicedSpecie.durability = splicedSpecie.durability < 1 ?
+            1 :
+            splicedSpecie.durability;
+        splicedSpecie.growTime = splicedSpecie.growTime < 1 ?
+            1 :
+            splicedSpecie.growTime;
+        splicedSpecie.seedsPerWorker = splicedSpecie.seedsPerWorker < 1 ?
+            1 :
+            splicedSpecie.seedsPerWorker;
+        splicedSpecie.foodPoint = splicedSpecie.foodPoint < 1 ?
+            1 :
+            splicedSpecie.foodPoint;
+
+        //TODO: IMPLEMENT RARITY? INCREMENT BY ONE OF HIGHEST?
+        //TODO: ADD IMAGE? Another lookuptable?
+        return splicedSpecie;
 
 	}
 
@@ -208,7 +223,7 @@ public class SpliceScreen : MonoBehaviour {
 			splicedSpecie.seedsPerWorker = getMin(baseSpecie1.seedsPerWorker, baseSpecie2.seedsPerWorker);
 
 		}
-		return splicedSpecie;
+        return splicedSpecie;
 	}
 
 	public List<Specie.NegativeProperty> calcNegativeProperties(Specie baseSpecie1, Specie baseSpecie2, int num_workers, int propertyCost) {

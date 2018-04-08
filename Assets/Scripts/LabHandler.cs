@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
 public class LabHandler : MonoBehaviour
 {
     enum LAB_VIEWS
@@ -56,18 +55,20 @@ public class LabHandler : MonoBehaviour
     List<DisasterProperty> chosenDisasterProperties;
     List<Specie.PositiveProperty> chosenNormalProperties;
     int numberOfWorkers = 1;
-    Coroutine cameraMovementCoroutine; //coroutine for moving camera
+    Coroutine cameraRotationCoroutine; //coroutine for moving camera
     private Vector3 defaultCamPos;
     public Vector3 spliceCamPos;
     public Vector3 cloneCamPos;
-  
+    private bool cameraRotationFinished;
+    public GameObject goToSpliceGO;
+    public GameObject goToCloneGO;
 
     // Use this for initialization
     void Awake()
     {
         chosenDisasterProperties = new List<DisasterProperty>();
         chosenNormalProperties = new List<Specie.PositiveProperty>();
-        cameraMovementCoroutine = null;
+        cameraRotationCoroutine = null;
         foreach (Specie specie in GameState.instance.knownSpecies)
         {
             GameObject newSpecieButton = Instantiate(draggableObject, spliceUIPanel.transform);
@@ -95,7 +96,6 @@ public class LabHandler : MonoBehaviour
         secondInsertedSpecie = null;
         specieToClone = null;
 
-        print(numberOfSpliceWorkersText.name);
         defaultCamPos = Camera.main.transform.position;
         selectedSplice = -1;
     }
@@ -132,17 +132,22 @@ public class LabHandler : MonoBehaviour
             {
                 //TODO: add visualization of  mouse over
                 SceneHandler.instance.changeScene(SceneHandler.SCENES.OVERWORLD);
+                SoundManager.instance.playSound(SoundManager.SOUNDS.LEAVE_LAB);
             }
-            if (cloneGO.GetComponent<MouseOverObj>().isMouseOver)
+            if (goToCloneGO.GetComponent<MouseOverObj>().isMouseOver)
             {
                 //TODO: add visualization of  mouse over
                 numberOfWorkers = 1;
+                updateNumberOfWorkersDisplay(true);
+                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
                 switchToClone();
             }
-            if (spliceGO.GetComponent<MouseOverObj>().isMouseOver)
+            if (goToSpliceGO.GetComponent<MouseOverObj>().isMouseOver)
             {
                 //TODO: add visualization of  mouse over
                 numberOfWorkers = 1;
+                updateNumberOfWorkersDisplay();
+                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
                 switchToSplice();
             }
         }
@@ -165,6 +170,7 @@ public class LabHandler : MonoBehaviour
                     selectedSplice = -1;
                 }
                 cloner.resetSeedDisplay();
+                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
                 switchToMainLab();
             }
 
@@ -176,6 +182,7 @@ public class LabHandler : MonoBehaviour
                 {
                     cloner.updateNumSeeds(GameState.instance.mySplices[selectedSplice], numberOfWorkers);
                 }
+                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
             }
 
             if (removeCloneWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
@@ -186,6 +193,7 @@ public class LabHandler : MonoBehaviour
                 {
                     cloner.updateNumSeeds(GameState.instance.mySplices[selectedSplice], numberOfWorkers);
                 }
+                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
             }
 
             if (cloneButton.GetComponent<MouseOverObj>().isMouseOver)
@@ -198,12 +206,20 @@ public class LabHandler : MonoBehaviour
                         {
                             specieToClone = GameState.instance.mySplices[selectedSplice];
                             cloner.Clone(specieToClone, numberOfWorkers);
+                            SoundManager.instance.playSound(SoundManager.SOUNDS.CLONE);
+                        }
+                        else
+                        {
+                            //TODO: HUD ERROR
                         }
                         numberOfWorkers = 1;
+                        cloner.updateNumSeeds(GameState.instance.mySplices[selectedSplice], numberOfWorkers);
+                        updateNumberOfWorkersDisplay(true);
                     }
                     else
                     {
                         StartCoroutine(blinkingOutline(cloner.getPacketGO()));
+                        SoundManager.instance.playSound(SoundManager.SOUNDS.ERROR_LAB);
                     }
                 }
                 else
@@ -211,6 +227,7 @@ public class LabHandler : MonoBehaviour
                     for (int i = 0; i < 5; i++)
                     {
                         StartCoroutine(blinkingOutline(cloneSplicesShelf.transform.GetChild(i).gameObject));
+                        SoundManager.instance.playSound(SoundManager.SOUNDS.ERROR_LAB);
                     }
                 }
                 
@@ -227,6 +244,7 @@ public class LabHandler : MonoBehaviour
                 {
                     specieToClone = null;
                 }
+                SoundManager.instance.playSound(SoundManager.SOUNDS.SELECT_SHELF_OBJ);
             }
 
         }
@@ -244,9 +262,9 @@ public class LabHandler : MonoBehaviour
     {
         for (int i = 0; i < leftPropertyScreen.transform.childCount; i++)
         {
-            if (leftPropertyScreen.transform.GetChild(i).GetComponent<MouseOverObj>().isMouseOver)
+            if (leftPropertyScreen.transform.GetChild(i).GetChild(0).GetComponent<MouseOverObj>().isMouseOver)
             {
-                
+                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI); //TODO: not sure about this
                 if (i < firstInsertedSpecie.resistantProperties.Count)
                 {
                     //basically toggling. TODO: Add dynamic function for this and other property type(s)
@@ -288,7 +306,7 @@ public class LabHandler : MonoBehaviour
                 updateSyringe();
             }
             //ASSUMING BOTH PROPERTY SCREENS HAVE SAME NUMBER OF CHILDREN(which they should
-            if (rightPropertyScreen.transform.GetChild(i).GetComponent<MouseOverObj>().isMouseOver)
+            if (rightPropertyScreen.transform.GetChild(i).GetChild(0).GetComponent<MouseOverObj>().isMouseOver)
             {
                 if (i < secondInsertedSpecie.resistantProperties.Count)
                 {
@@ -358,6 +376,7 @@ public class LabHandler : MonoBehaviour
                     selectedSplice = -1;
                 }
                 switchToMainLab();
+                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
             }
 
             if (addSpliceWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
@@ -365,6 +384,7 @@ public class LabHandler : MonoBehaviour
                 numberOfWorkers++;
                 updateNumberOfWorkersDisplay();
                 updateSyringe();
+                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
             }
 
             if (removeSpliceWorkerButton.GetComponent<MouseOverObj>().isMouseOver)
@@ -372,6 +392,7 @@ public class LabHandler : MonoBehaviour
                 numberOfWorkers--;
                 updateNumberOfWorkersDisplay();
                 updateSyringe();
+                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
             }
 
             if (spliceButton.GetComponent<MouseOverObj>().isMouseOver)
@@ -387,6 +408,9 @@ public class LabHandler : MonoBehaviour
                                 Specie newSplice = splicer.spliceSpecies(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers, chosenDisasterProperties, chosenNormalProperties);
                                 GameState.instance.mySplices[selectedSplice] = newSplice;
                                 setSpliceGraphics(selectedSplice, newSplice.image);
+                                numberOfWorkers = 1;
+                                updateNumberOfWorkersDisplay();
+                                SoundManager.instance.playSound(SoundManager.SOUNDS.SPLICE);
                             }
                             else
                             {
@@ -398,22 +422,28 @@ public class LabHandler : MonoBehaviour
                             for(int i =0; i < 5; i++)
                             {
                                 StartCoroutine(blinkingOutline(mySplicesShelf.transform.GetChild(i).gameObject));
+                                SoundManager.instance.playSound(SoundManager.SOUNDS.ERROR_LAB);
                             }
                         }
                     }
                     else
                     {
                         StartCoroutine(blinkingOutline(spliceMachines[1]));
+                        SoundManager.instance.playSound(SoundManager.SOUNDS.ERROR_LAB);
                     }
                 }
                 else
                 {
                     StartCoroutine(blinkingOutline(spliceMachines[0]));
+                    SoundManager.instance.playSound(SoundManager.SOUNDS.ERROR_LAB);
                 }
             }
 
             handlePropertySelection();
-            findSelectedCustomSplice();
+            if (findSelectedCustomSplice())
+            {
+                SoundManager.instance.playSound(SoundManager.SOUNDS.SELECT_SHELF_OBJ);
+            }
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -438,6 +468,7 @@ public class LabHandler : MonoBehaviour
                             break;
                     }
                     spliceMachines[i].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = draggedObject.GetComponent<Image>().sprite;
+                    SoundManager.instance.playSound(SoundManager.SOUNDS.FARM);//TODO: maybe have own sound, but think farm works
                     //splicer.updateStatsDisplay(firstInsertedSpecie, secondInsertedSpecie, numberOfWorkers); //redundant?
                 }
             }
@@ -551,40 +582,52 @@ public class LabHandler : MonoBehaviour
 
     void switchToMainLab()
     {
-        currentView = LAB_VIEWS.LOBBY;
         topLevelSpliceUI.SetActive(false);
-        cloneGO.GetComponent<BoxCollider2D>().enabled = true;
-        spliceGO.GetComponent<BoxCollider2D>().enabled = true;
-        if (cameraMovementCoroutine != null)
+        //cloneGO.GetComponent<BoxCollider2D>().enabled = true;
+        //spliceGO.GetComponent<BoxCollider2D>().enabled = true;
+        if (cameraRotationCoroutine != null)
         {
-            StopCoroutine(cameraMovementCoroutine);
+            StopCoroutine(cameraRotationCoroutine);
         }
-        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(defaultCamPos));
+        //cameraMovementCoroutine = StartCoroutine(moveCameraTowards(defaultCamPos));
+        switch(currentView)
+        {
+            case LAB_VIEWS.SPLICING:
+                cameraRotationCoroutine = StartCoroutine(rotateCamera(-90));
+                break;
+            case LAB_VIEWS.CLONING:
+                cameraRotationCoroutine = StartCoroutine(rotateCamera(90));
+                break;
+            default:
+                print("Error. Invalid switch parameter");
+                break;
+        }
+        currentView = LAB_VIEWS.LOBBY;
     }
 
     void switchToClone()
     {
-        cloneGO.GetComponent<BoxCollider2D>().enabled = false;
+        //cloneGO.GetComponent<BoxCollider2D>().enabled = false;
         currentView = LAB_VIEWS.CLONING;
 
-        if (cameraMovementCoroutine != null)
+        if (cameraRotationCoroutine != null)
         {
-            StopCoroutine(cameraMovementCoroutine);
+            StopCoroutine(cameraRotationCoroutine);
         }
-        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(cloneCamPos));
+        cameraRotationCoroutine = StartCoroutine(rotateCamera(-90));
     }
 
     void switchToSplice()
     {
         currentView = LAB_VIEWS.SPLICING;
-        spliceGO.GetComponent<BoxCollider2D>().enabled = false;
+        //spliceGO.GetComponent<BoxCollider2D>().enabled = false;
         topLevelSpliceUI.SetActive(true);
-        if (cameraMovementCoroutine !=null)
+        if (cameraRotationCoroutine !=null)
         {
-            StopCoroutine(cameraMovementCoroutine);
+            StopCoroutine(cameraRotationCoroutine);
         }
-        
-        cameraMovementCoroutine = StartCoroutine(moveCameraTowards(spliceCamPos));
+
+        cameraRotationCoroutine = StartCoroutine(rotateCamera(90));
     }
 
     IEnumerator moveCameraTowards(Vector3 target, float duration = 0.5f)
@@ -600,4 +643,21 @@ public class LabHandler : MonoBehaviour
             yield return null;
         }
     }
+
+    IEnumerator rotateCamera(float degreeInY, float duration = 0.5f)
+    {
+        cameraRotationFinished = false;
+        Vector3 startRot = Camera.main.transform.eulerAngles;
+        
+        for (float f = 0; f < duration; f += Time.deltaTime)
+        {
+            float pd = f / duration;
+            pd *= pd;
+            Camera.main.transform.eulerAngles = startRot + Vector3.up * degreeInY * pd;
+            yield return null;
+        }
+        Camera.main.transform.eulerAngles = startRot + Vector3.up * degreeInY;
+        cameraRotationFinished = true;
+    }
+
 }

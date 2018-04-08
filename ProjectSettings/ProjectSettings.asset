@@ -633,7 +633,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: fa04e251-d46b-4c87-a3d2-bb4cec502be6
   projectName: GENialt Digitalt
   organizationId: henning-1574697

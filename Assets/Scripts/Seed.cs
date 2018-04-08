@@ -16,6 +16,15 @@ public class Seed {
         GONE_BAD
     }
 
+    //another hacky solution for reasons..
+    public Seed(Seed seed)
+    {
+        name = seed.name;
+        specie = seed.specie;
+        daysGrown = 0;
+        image = seed.image;
+    }
+
 	public Seed (string name, Specie specie)
 	{
 		this.name = name;

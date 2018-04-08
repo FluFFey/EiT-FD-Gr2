@@ -43,7 +43,7 @@ public class SoundCaller : MonoBehaviour
         if (fxSources.Length > 0)
         {
             AudioSource returnSource = fxSources[fxSources.Length - 1];
-            fxSources = fxSources.Take(fxSources.Length - 1).ToArray(); //basically remakes whole array. dunno if there is a faster way
+            fxSources = fxSources.Take(fxSources.Length - 1).ToArray(); //basically remakes whole array. dunno if there is a faster way, but shouldn't reserve that many audiosources in the first place
             return returnSource;
         }
 

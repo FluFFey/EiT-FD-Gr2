@@ -69,10 +69,10 @@ public class Cloning : MonoBehaviour{
         seedPacket = Instantiate(seedPrefab, transform);
         specieInPacket = spliceToClone;
         seedPacket.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = spliceToClone.image;
-        Vector3 startPos = new Vector3(-10f, -4.5f, 0);
-        float goalY = -7;
-        float dropdist = goalY + 4.5f;
-        seedPacket.transform.position = startPos;
+        Vector3 startPos = new Vector3(6.7f, -0.8f, 0);
+        float goalY = -3.06f;
+        float dropdist = goalY + 0.8f;
+        seedPacket.transform.localPosition = startPos;
         yield return new WaitForSeconds(1.0f);
         for(float f=0; f < dropTime; f+=Time.deltaTime)
         {
@@ -80,13 +80,13 @@ public class Cloning : MonoBehaviour{
             pd *= pd;
             if (seedPacket!=null)
             {
-                seedPacket.transform.position = startPos + Vector3.up * dropdist * pd;
+                seedPacket.transform.localPosition = startPos + Vector3.up * dropdist * pd;
                 yield return null;
             }
         }
         if (seedPacket != null)
         {
-            seedPacket.transform.position = new Vector3(-10f, goalY, 0);
+            seedPacket.transform.localPosition = new Vector3(6.7f, goalY, 0);
         }
     }
 

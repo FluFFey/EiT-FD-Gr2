@@ -22,9 +22,9 @@ public class Specie {
 	{
 		this.name = name;
 		this.foodPoint = foodPoint;
-		this.durability = durability;
-		this.growTime = growTime;
-		this.resistantProperties = properties;
+        this.durability = durability < 1 ? 1 : durability;
+		this.growTime = growTime < 1 ? 1 : growTime;
+        this.resistantProperties = properties;
 		this.positiveProperties = positiveProps;
 		this.negativeProperties = negativeProps;
 		this.seedsPerWorker = seedsPerWorker;

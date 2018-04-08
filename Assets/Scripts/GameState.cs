@@ -220,8 +220,8 @@ public class GameState : MonoBehaviour {
 
     private void initInitialFarmState()
     {
-        Seed newSeed = new Seed(baseSpecies[2].name, baseSpecies[2]);
-        newSeed.daysGrown = 2;
+        Seed newSeed = new Seed(baseSpecies[4].name+ " seed", baseSpecies[4]);
+        newSeed.daysGrown = 1;
         plantedSeeds.Add(20, newSeed);
         plantedSeeds.Add(21, newSeed);
         plantedSeeds.Add(22, newSeed);
@@ -398,8 +398,9 @@ public class GameState : MonoBehaviour {
 		}
 
 		foreach (var key in removableItems) {
-			this.plantedSeeds.Remove (key);
-		}
+            //this.plantedSeeds.Remove (key);
+            this.plantedSeeds[key].daysGrown = 500; //TODO: HACKY! Needs fix if this is ever to be built upon (also changed from original design of "removing" stuff 
+        }
 
 	}
 
@@ -444,7 +445,8 @@ public class GameState : MonoBehaviour {
 	// plants seed at desired index if available slot
 	public void plantSeed(Seed seed, int index) {
 		if (emptyFarmSlot (index)) {
-			this.plantedSeeds.Add (index, seed);
+            //NOTE: need new Seed here because otherwise the "planted seeds" will refer to the same seed instead of individual ones
+            this.plantedSeeds.Add (index, new Seed(seed));
             inventorySeeds[seed]--;
             if (inventorySeeds[seed]==0)
             {
@@ -463,8 +465,10 @@ public class GameState : MonoBehaviour {
 	// method that increments number of days grown for each seed. 
 	// to be called when next day is clicked
 	public void incrementSeedDaysGrown() {
-		foreach (Seed seed in this.plantedSeeds.Values) {
+        foreach (Seed seed in this.plantedSeeds.Values) {
 			seed.daysGrown++;
+            //print(seed.name);
+            //print(seed.daysGrown);
 		}
 	}
 
@@ -528,7 +532,7 @@ public class GameState : MonoBehaviour {
         MOLEPUFFERFISH=16,
         CORNPUFFERFISH=18,
         MOOSEPUFFERFISH=22,
-        PUFFERFISHPUFFERFISH=13
+        PUFFERFISHPUFFERFISH=30
     }
 
     public string getSpecieName(string baseSpecie1, string baseSpecie2)
@@ -728,4 +732,3 @@ public class GameState : MonoBehaviour {
     }
 
 }
-
