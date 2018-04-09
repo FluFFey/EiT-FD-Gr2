@@ -17,7 +17,7 @@ public class GameState : MonoBehaviour {
 	public const int DISASTER_INTERVAL = 4;
 	public const int TOTAL_DAYS = 20;
 	public const int FOOD_POINT_PER_WORKER = 2;
-
+    
 	//HUD-ATTRIBUTES
 	int survivors; 
 	List<Job> currentJobs;
@@ -60,6 +60,12 @@ public class GameState : MonoBehaviour {
     // FARM-ATTRIBUTES.
     Dictionary<int, Seed> plantedSeeds;
 
+    // Other
+    public bool showHelpOverlay = true;
+    public Specie firstInsertedSpecie;
+    public Specie secondInsertedSpecie;
+
+
     // Update is called once per frame
     void Update () {
 		
@@ -91,8 +97,8 @@ public class GameState : MonoBehaviour {
 		// init Farm-State
 		this.plantedSeeds = new Dictionary<int, Seed>();
 
-		// Set disasters at given interval
-
+        // Set disasters at given interval
+        
 		setDisasters (DISASTER_INTERVAL);
 
 	}
@@ -220,13 +226,41 @@ public class GameState : MonoBehaviour {
 
     private void initInitialFarmState()
     {
-        Seed newSeed = new Seed(baseSpecies[4].name+ " seed", baseSpecies[4]);
-        newSeed.daysGrown = 1;
-        plantedSeeds.Add(20, newSeed);
-        plantedSeeds.Add(21, newSeed);
-        plantedSeeds.Add(22, newSeed);
-        plantedSeeds.Add(23, newSeed);
-        plantedSeeds.Add(24, newSeed);
+        Seed baseSeedOne = new Seed(baseSpecies[2].name+ " seed", baseSpecies[2]);
+        Seed baseSeedTwo = new Seed(baseSpecies[3].name + " seed", baseSpecies[3]);
+        Seed baseSeedThree = new Seed(baseSpecies[4].name + " seed", baseSpecies[4]);
+        Seed baseSeedFour = new Seed(baseSpecies[2].name + " seed", baseSpecies[2]);
+        Seed baseSeedFive = new Seed(baseSpecies[1].name + " seed", baseSpecies[1]);
+        baseSeedOne.daysGrown = 2;
+        baseSeedTwo.daysGrown = 3;
+        baseSeedThree.daysGrown = 0;
+        baseSeedFour.daysGrown = 1;
+        baseSeedFive.daysGrown = 2;
+        plantedSeeds.Add(0, new Seed(baseSeedTwo));
+        plantedSeeds.Add(1, new Seed(baseSeedTwo));
+        plantedSeeds.Add(6, new Seed(baseSeedThree));
+        plantedSeeds.Add(7, new Seed(baseSeedThree));
+        plantedSeeds.Add(9, new Seed(baseSeedThree));
+        plantedSeeds.Add(12, new Seed(baseSeedFour));
+        plantedSeeds.Add(13, new Seed(baseSeedFour));
+        plantedSeeds.Add(15, new Seed(baseSeedFour));
+        plantedSeeds.Add(16, new Seed(baseSeedFour));
+        plantedSeeds.Add(2, new Seed(baseSeedFive));
+        plantedSeeds.Add(3, new Seed(baseSeedFive));
+        plantedSeeds.Add(4, new Seed(baseSeedFive));
+        //these are pregrown so they are "ok"
+        plantedSeeds.Add(14, baseSeedOne);
+        plantedSeeds.Add(17, baseSeedOne);
+        plantedSeeds.Add(18, baseSeedOne);
+        plantedSeeds.Add(20, baseSeedOne);
+        plantedSeeds.Add(22, baseSeedOne);
+        plantedSeeds.Add(23, baseSeedOne);
+
+        setSeeds(new Seed(baseSeedFour), 5);
+        mySplices[1] = baseSpecies[2];
+        firstInsertedSpecie = baseSpecies[2];
+        secondInsertedSpecie = baseSpecies[0];
+
     }
 
     void Start()
@@ -291,7 +325,7 @@ public class GameState : MonoBehaviour {
 	//TO BE TRIGGED WHEN NEXT DAY IS PRESSED. 
 	public 	void resetJobs() {
 		//new day, new jobs.
-		this.currentJobs = new List<Job>();
+		this.currentJobs.Clear();
 	}
 
     //GETTERS AND SETTERS
@@ -371,10 +405,18 @@ public class GameState : MonoBehaviour {
 		// INCEREMENT DAY AND RESET FOODPOINTSCONSUMED
 		daysPassed++;
 		this.foodPointsConsumed = 0;
-
+        resetJobs(); //Isn't this what we want? reset jobs every day
 		//TODO: CHECK IF ANY SEEDS ARE RIPE.
 
 		// ADD LOGIC TO CHECK IF GAME IS WON/OVER.
+        if (daysPassed == 20)
+        {
+            SceneHandler.instance.changeScene(SceneHandler.SCENES.VICTORY);
+        }
+        if (survivors <= 0)
+        {
+            SceneHandler.instance.changeScene(SceneHandler.SCENES.LOSS);
+        }
 	}
 
 	// method that loops through each seed and checks it corresponding resitances vs the disastertype.
@@ -403,6 +445,11 @@ public class GameState : MonoBehaviour {
         }
 
 	}
+
+    public int getDaysPassed()
+    {
+        return daysPassed;
+    }
 
 
 	//SETS PREDEFINED DISASTERS AND ADDS A RANDOM DISASTER TO EACH EVENT.
@@ -433,7 +480,26 @@ public class GameState : MonoBehaviour {
 		return this.naturalDisasters.ContainsKey (day);
 	}
 
-	public int calculateSurvivors() {
+    public int getFirstDisasterDate()
+    {
+        int firstDate = 1000;
+
+        foreach (int date in naturalDisasters.Keys)
+        {
+            if (date > daysPassed && date < firstDate)
+            {
+                firstDate = date;
+            }
+        }
+        return firstDate;
+    }
+
+    public NaturalDisaster getDisaster(int day)
+    {
+        return naturalDisasters[day];
+    }
+
+    public int calculateSurvivors() {
 		float rest = this.survivors*FOOD_POINT_PER_WORKER - this.foodPointsConsumed;
 		this.survivors = this.survivors - Mathf.CeilToInt (rest / (float)FOOD_POINT_PER_WORKER);
 		return this.survivors;

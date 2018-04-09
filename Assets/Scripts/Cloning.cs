@@ -41,6 +41,7 @@ public class Cloning : MonoBehaviour{
             if (seedPacket !=null && seedPacket.GetComponent<MouseOverObj>().isMouseOver)
             {
                 //play sound
+                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
                 Seed seed = new Seed(specieInPacket.name + " seed", specieInPacket);
                 GameState.instance.setSeeds(seed, numberOfSeedsInPacket);
                 Destroy(seedPacket);

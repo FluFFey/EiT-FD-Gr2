@@ -29,8 +29,8 @@ public class HUDScript : MonoBehaviour {
             int numberOfDaysPassed = 0;
             GameState.instance.getHUDData(out numberOfSurvivors, out numberOfWorkers, out numberOfDaysPassed);
             survivorsText.text = numberOfSurvivors.ToString();
-            workersText.text = numberOfWorkers.ToString();
-            //TODO: update with food eaten
+            workersText.text = (numberOfSurvivors-numberOfWorkers).ToString();
+
             requiredFoodText.text = GameState.instance.getFoodPointsConsumed().ToString()+"/" + (numberOfSurvivors * GameState.FOOD_POINT_PER_WORKER).ToString();
             daysText.text = numberOfDaysPassed.ToString(); 
         }

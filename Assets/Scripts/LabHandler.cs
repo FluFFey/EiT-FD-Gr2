@@ -62,6 +62,7 @@ public class LabHandler : MonoBehaviour
     private bool cameraRotationFinished;
     public GameObject goToSpliceGO;
     public GameObject goToCloneGO;
+    
 
     // Use this for initialization
     void Awake()
@@ -98,6 +99,23 @@ public class LabHandler : MonoBehaviour
 
         defaultCamPos = Camera.main.transform.position;
         selectedSplice = -1;
+
+        for (int i = 0; i < 2; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    firstInsertedSpecie = GameState.instance.firstInsertedSpecie;
+                    spliceMachines[i].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = GameState.instance.firstInsertedSpecie.image;
+                    break;
+                case 1:
+                    secondInsertedSpecie = GameState.instance.secondInsertedSpecie;
+                    spliceMachines[i].transform.Find("spliceImage").GetComponent<SpriteRenderer>().sprite = GameState.instance.secondInsertedSpecie.image;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -163,15 +181,23 @@ public class LabHandler : MonoBehaviour
             //TODO: add visualization of  mouse over
             if (leaveCloning.GetComponent<MouseOverObj>().isMouseOver)
             {
-                if (selectedSplice != -1)
+                if (!cloner.isSeedOnFloor())
                 {
-                    cloneSplicesShelf.transform.GetChild(selectedSplice).GetComponent<MouseOverObj>().lockedOutline = false;
-                    cloneSplicesShelf.transform.GetChild(selectedSplice).GetComponent<MouseOverObj>().removeOutline();
-                    selectedSplice = -1;
+                    if (selectedSplice != -1)
+                    {
+                        cloneSplicesShelf.transform.GetChild(selectedSplice).GetComponent<MouseOverObj>().lockedOutline = false;
+                        cloneSplicesShelf.transform.GetChild(selectedSplice).GetComponent<MouseOverObj>().removeOutline();
+                        selectedSplice = -1;
+                    }
+                    cloner.resetSeedDisplay();
+                    SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
+                    switchToMainLab();
                 }
-                cloner.resetSeedDisplay();
-                SoundManager.instance.playSound(SoundManager.SOUNDS.DEFAULT_UI);
-                switchToMainLab();
+                else
+                {
+                    StartCoroutine(blinkingOutline(cloner.getPacketGO()));
+                }
+                
             }
 
             if (addCloneWorkerButton.GetComponent<MouseOverObj>().isMouseOver)

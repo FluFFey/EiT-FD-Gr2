@@ -9,9 +9,11 @@ public class DragableSprite : MonoBehaviour {
     private Seed seed;
     private FarmHandler farmHandlerScript;
     public GameObject objectToImitate;
+    private TextMesh textToUpdate;
     // Use this for initialization
     void Start ()
     {
+        textToUpdate = FindObjectOfType<TextMesh>();
         farmHandlerScript = GameObject.Find("FarmHandler").GetComponent<FarmHandler>();
     }
 
@@ -30,6 +32,7 @@ public class DragableSprite : MonoBehaviour {
         }
         if (Input.GetMouseButton(0) && dragObj != null)
         {
+            displayStats(seed.specie);
             Vector3 input = Input.mousePosition;
             input.z = 100;
             Vector3 newPos = Camera.main.ScreenToWorldPoint(input);
@@ -41,6 +44,34 @@ public class DragableSprite : MonoBehaviour {
             Destroy(dragObj);
         }
         
+    }
+
+    private void displayStats(Specie specie)
+    {
+        textToUpdate.text = "Specie:    " + specie.name +
+                                 "\nFood:                           " + specie.foodPoint +
+                                 "\nDurability:               " + specie.durability +
+                                 "\nGrow time:               " + specie.growTime;
+        
+        if(specie.resistantProperties.Count !=0)
+        {
+            textToUpdate.text += "\nResistances:";
+            foreach (DisasterProperty property in specie.resistantProperties)
+            {
+                switch (property)
+                {
+                    case DisasterProperty.EARTHQUAKE:
+                        textToUpdate.text += "\nTremor resistance";
+                        break;
+                    case DisasterProperty.WATER:
+                        textToUpdate.text += "\nWater resistance";
+                        break;
+                    case DisasterProperty.WIND:
+                        textToUpdate.text += "\nWind resistance";
+                        break;
+                }
+            }
+        }
     }
 
     internal void setSeed(Seed newSeed)

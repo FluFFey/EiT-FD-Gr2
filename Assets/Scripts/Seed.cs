@@ -21,7 +21,7 @@ public class Seed {
     {
         name = seed.name;
         specie = seed.specie;
-        daysGrown = 0;
+        daysGrown = seed.daysGrown; //hopefully no consequences
         image = seed.image;
     }
 
@@ -35,14 +35,18 @@ public class Seed {
 
     public SEED_STATE getSeedState()
     {
+        Debug.Log(daysGrown);
         if (daysGrown < specie.growTime)
         {
+            Debug.Log("a");
             return SEED_STATE.SEED;
         }
         if (daysGrown <specie.growTime+specie.durability)
         {
+            Debug.Log("b");
             return SEED_STATE.GROWN;
         }
+        Debug.Log("c");
         return SEED_STATE.GONE_BAD;
     }
 

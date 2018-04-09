@@ -24,6 +24,7 @@ public class SoundManager : MonoBehaviour {
     public AudioClip waterNightSound;
     public AudioClip toggleSettings;
     public AudioClip defaultUISound;
+    public AudioClip readBottleMessage;
     public enum SOUNDS
     {
         CLONE,
@@ -41,7 +42,8 @@ public class SoundManager : MonoBehaviour {
         NIGHT_EARTHQUAKE,
         NIGHT_WIND,
         NIGHT_WATER,
-        DEFAULT_UI
+        DEFAULT_UI,
+        READ_MESSAGE
     }
 
     // Use this for initialization
@@ -111,6 +113,9 @@ public class SoundManager : MonoBehaviour {
                 break;
             case SOUNDS.DEFAULT_UI:
                 clipToPlay = defaultUISound;
+                break;
+            case SOUNDS.READ_MESSAGE:
+                clipToPlay = readBottleMessage;
                 break;
             default:
                 print("invalid sound requested");

@@ -15,7 +15,7 @@ public class FarmHandler : MonoBehaviour {
     Dictionary<string, Vector3> rotationForPlants;
     Dictionary<string, Vector3> scaleForPlants;
     private bool feasting = false; //true during day/night transition
-
+    public TextMesh cropInfoBoardTextMesh;
     // Use this for initialization
 
     void Start ()
@@ -166,16 +166,16 @@ public class FarmHandler : MonoBehaviour {
                 SoundManager.instance.playSound(SoundManager.SOUNDS.FARM);
             }
             updateSeed(seeds[seedToPop], seedToPop);
-            float delay = UnityEngine.Random.Range(0.3f, 0.8f);
+            float delay = UnityEngine.Random.Range(0.2f, 0.95f);
             yield return new WaitForSeconds(delay);
             extraSecondsWaited += delay;
             seedPositions.Remove(seedToPop);
         }
 
 
-        yield return new WaitForSeconds(4.5f-extraSecondsWaited);
+        yield return new WaitForSeconds(3.25f-extraSecondsWaited);
         nightSoundSource.Stop();
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(2.25f);
         StartCoroutine(MusicManager.instance.setVolume(0.1f));
         StartCoroutine(CameraScript.instance.fade(true, 2.5f));
         yield return new WaitForSeconds(2.0f);

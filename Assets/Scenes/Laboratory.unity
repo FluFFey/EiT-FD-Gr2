@@ -1808,6 +1808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e81159e32c854a4ca12a3addb6b3f47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fadeSpriteRenderer: {fileID: 0}
 --- !u!114 &1427927379 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114344263226661090, guid: b2a64624de0f1a3459c85cfd0ddd6d87,
